@@ -3,43 +3,443 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>App Disfarce</title>
+<title>Painel Pegasus</title>
 <style>
-  body {
-    font-family: 'Share Tech Mono', monospace;
-    background: #000;
-    color: #0f0;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Share Tech Mono', monospace;
+}
+body, html {
+  height: 100%;
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+  color: #00ff99;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.container {
+  width: 100%;
+  max-width: 480px;
+  background: rgba(0, 0, 0, 0.75);
+  border-radius: 10px;
+  box-shadow: 0 0 20px #00ff99;
+  padding: 20px;
+  backdrop-filter: blur(10px);
+  position: relative;
+  z-index: 1;
+  filter: brightness(1);
+}
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #00ff99;
+  text-shadow: 0 0 10px #00ff99;
+}
+input, button, textarea {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border: 2px solid #00ff99;
+  border-radius: 6px;
+  background: transparent;
+  color: #00ff99;
+  font-size: 1rem;
+  outline: none;
+  transition: background-color 0.3s ease;
+}
+input:focus, textarea:focus {
+  background-color: #003822;
+}
+button {
+  cursor: pointer;
+  background: #00ff99;
+  color: #000;
+  font-weight: bold;
+  border: none;
+  box-shadow: 0 0 10px #00ff99;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+button:hover {
+  background: #009944;
+  color: #fff;
+}
+.hidden {
+  display: none;
+}
+.tabs {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #00ff99;
+}
+.tab {
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 6px 6px 0 0;
+  background: transparent;
+  color: #00ff99;
+  box-shadow: inset 0 -3px 0 0 transparent;
+  transition: box-shadow 0.3s ease;
+  user-select: none;
+}
+.tab.active {
+  box-shadow: inset 0 -3px 0 0 #00ff99;
+  font-weight: bold;
+}
+#remoteControl button {
+  margin-bottom: 10px;
+}
+#accountsList div {
+  border: 1px solid #00ff99;
+  margin-bottom: 10px;
+  padding: 8px;
+}
+#linksList div {
+  border: 1px solid #00ff99;
+  margin-bottom: 10px;
+  padding: 8px;
+}
+.logout-btn {
+  background: transparent;
+  border: 1px solid #00ff99;
+  color: #00ff99;
+  width: auto;
+  padding: 6px 12px;
+  float: right;
+  margin-top: -10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+.logout-btn:hover {
+  background-color: #009944;
+  color: #fff;
+}
+/* Animação fundo hacker */
+@keyframes matrixRain {
+  0% {
+    background-position: 0 0;
   }
+  100% {
+    background-position: 0 100%;
+  }
+}
+body {
+  background-image: url('https://cdn.pixabay.com/photo/2017/08/30/23/52/code-2692105_960_720.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  animation: matrixRain 20s linear infinite;
+  filter: brightness(0.3);
+}
+/* Responsividade mobile */
+@media (max-width: 480px) {
+  .container {
+    max-width: 95%;
+    padding: 15px 10px;
+    box-shadow: none;
+    border-radius: 0;
+  }
+  
   h2 {
-    margin-bottom: 20px;
-    text-shadow: 0 0 10px #0f0;
+    font-size: 1.5rem;
   }
-  button {
-    padding: 12px 24px;
+  
+  input, button, textarea {
     font-size: 1rem;
-    background: #0f0;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    color: #000;
-    font-weight: bold;
-    box-shadow: 0 0 10px #0f0;
-    transition: background-color 0.3s ease;
+    padding: 10px;
   }
-  button:hover {
-    background-color: #090;
-    color: #fff;
+  
+  .tabs {
+    flex-direction: column;
+    gap: 8px;
   }
+  
+  .tab {
+    text-align: center;
+    padding: 12px 0;
+    border-radius: 0;
+    box-shadow: inset 0 -3px 0 0 transparent;
+  }
+  
+  .tab.active {
+    box-shadow: inset 0 -3px 0 0 #00ff99;
+  }
+  
+  .logout-btn {
+    float: none;
+    width: 100%;
+    margin-top: 10px;
+  }
+}
 </style>
 </head>
 <body>
-  <h2>App Rodando</h2>
-  <button onclick="window.close()">Fechar App</button>
+
+<div class="container" id="loginContainer">
+  <h2>Login</h2>
+  <input type="text" id="loginUser" placeholder="Usuário" autocomplete="username" />
+  <input type="password" id="loginPass" placeholder="Senha" autocomplete="current-password" />
+  <button onclick="login()">Entrar</button>
+  <button onclick="showRegister()">Criar Conta</button>
+</div>
+
+<div class="container hidden" id="registerContainer">
+  <h2>Registrar</h2>
+  <input type="text" id="regUser" placeholder="Usuário" autocomplete="username" />
+  <input type="password" id="regPass" placeholder="Senha" autocomplete="new-password" />
+  <button onclick="register()">Registrar</button>
+  <button onclick="showLogin()">Já tenho conta</button>
+</div>
+
+<div class="container hidden" id="dashboardContainer">
+  <button class="logout-btn" onclick="logout()">Sair</button>
+  <h2>Painel Hacker Moderno</h2>
+  <div class="tabs">
+    <div class="tab active" data-tab="remoteControl">Controle Remoto</div>
+    <div class="tab" data-tab="bankAccounts">Contas Bancárias</div>
+    <div class="tab" data-tab="devices">Links para Captura</div>
+  </div>
+
+  <div id="remoteControl" class="tab-content">
+    <h3>Controle Remoto (Simulado)</h3>
+    <button onclick="alert('Câmera ativada (simulado)')">Ativar Câmera</button>
+    <button onclick="alert('Microfone ativado (simulado)')">Ativar Microfone</button>
+    <button onclick="alert('Localização do dispositivo (simulado)')">Localizar Dispositivo</button>
+    <button onclick="alert('Bloquear dispositivo (simulado)')">Bloquear Dispositivo</button>
+    <button onclick="alert('Apagar dados do dispositivo (simulado)')">Apagar Dados</button>
+  </div>
+
+  <div id="bankAccounts" class="tab-content hidden">
+    <h3>Contas Bancárias</h3>
+    <div id="accountsList"></div>
+    <input type="text" id="accountBank" placeholder="Banco" />
+    <input type="text" id="accountNumber" placeholder="Número da Conta" />
+    <input type="text" id="accountHolder" placeholder="Titular" />
+    <button onclick="addBankAccount()">Adicionar Conta</button>
+  </div>
+
+  <div id="devices" class="tab-content hidden">
+    <h3>Links para Captura de IP e Dados</h3>
+    <button onclick="generateLink()">Gerar Link Único</button>
+    <div id="linksList" style="margin-top: 15px;"></div>
+  </div>
+
+  <button onclick="generatePDF()">Gerar Relatório PDF</button>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+// Tabs
+const tabs = document.querySelectorAll('.tab');
+const tabContents = document.querySelectorAll('.tab-content');
+tabs.forEach(tab => {
+  tab.addEventListener('click', () => {
+    tabs.forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    const target = tab.dataset.tab;
+    tabContents.forEach(tc => {
+      tc.classList.toggle('hidden', tc.id !== target);
+    });
+  });
+});
+
+// Login / Registro
+function showRegister() {
+  document.getElementById('loginContainer').classList.add('hidden');
+  document.getElementById('registerContainer').classList.remove('hidden');
+}
+function showLogin() {
+  document.getElementById('registerContainer').classList.add('hidden');
+  document.getElementById('loginContainer').classList.remove('hidden');
+}
+function register() {
+  const user = document.getElementById('regUser').value.trim();
+  const pass = document.getElementById('regPass').value.trim();
+  if(user && pass) {
+    localStorage.setItem('user', user);
+    localStorage.setItem('pass', pass);
+    alert('Usuário registrado! Faça login.');
+    showLogin();
+  } else {
+    alert('Preencha todos os campos!');
+  }
+}
+function login() {
+  const user = document.getElementById('loginUser').value.trim();
+  const pass = document.getElementById('loginPass').value.trim();
+  if(user === localStorage.getItem('user') && pass === localStorage.getItem('pass')) {
+    document.getElementById('loginContainer').classList.add('hidden');
+    document.getElementById('dashboardContainer').classList.remove('hidden');
+  } else {
+    alert('Usuário ou senha inválidos!');
+  }
+}
+function logout() {
+  document.getElementById('dashboardContainer').classList.add('hidden');
+  showLogin();
+  clearData();
+}
+
+// Contas bancárias
+function addBankAccount() {
+  const bank = document.getElementById('accountBank').value.trim();
+  const number = document.getElementById('accountNumber').value.trim();
+  const holder = document.getElementById('accountHolder').value.trim();
+  if(bank && number && holder) {
+    const container = document.getElementById('accountsList');
+    const div = document.createElement('div');
+    div.textContent = `Banco: ${bank} | Conta: ${number} | Titular: ${holder}`;
+    container.appendChild(div);
+    document.getElementById('accountBank').value = '';
+    document.getElementById('accountNumber').value = '';
+    document.getElementById('accountHolder').value = '';
+  } else {
+    alert('Preencha todos os campos das contas bancárias!');
+  }
+}
+
+// Dados para captura
+const captureData = {}; // token -> { ips: [], userAgents: [] }
+
+// Gerar link para captura de IP e dados
+function generateLink() {
+  const token = Math.random().toString(36).substring(2, 10);
+  const link = `${location.origin}/app.html?token=${token}`;  // link direto para app.html
+
+  captureData[token] = { ips: [], userAgents: [] };
+
+  const container = document.getElementById('linksList');
+  const div = document.createElement('div');
+  div.innerHTML = `
+    <strong>Link:</strong> <a href="${link}" target="_blank">${link}</a><br>
+    <button onclick="showCapturedData('${token}')">Mostrar Dados Capturados</button>
+    <div id="data-${token}" style="margin-top: 5px; font-size: 0.9rem;"></div>
+    <hr>
+  `;
+  container.appendChild(div);
+
+  // Copiar link e mostrar mensagens
+  navigator.clipboard.writeText(link).then(() => {
+    alert('Link copiado! Envie para sua vítima.');
+    setTimeout(() => {
+      alert('Vítima conectada.');
+    }, 3000);
+  });
+}
+
+// Mostrar dados capturados no painel
+function showCapturedData(token) {
+  const dataDiv = document.getElementById(`data-${token}`);
+  const data = captureData[token];
+  if (!data || (data.ips.length === 0 && data.userAgents.length === 0)) {
+    dataDiv.innerHTML = '<em>Nenhum dado capturado ainda.</em>';
+    return;
+  }
+
+  let html = '<strong>IPs Capturados:</strong><br>';
+  data.ips.forEach((ip, i) => {
+    html += `#${i+1}: ${ip} <br>`;
+  });
+
+  html += '<br><strong>User Agents:</strong><br>';
+  data.userAgents.forEach((ua, i) => {
+    html += `#${i+1}: ${ua} <br>`;
+  });
+
+  dataDiv.innerHTML = html;
+}
+
+// Gerar PDF
+async function generatePDF() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+  doc.setFont('courier', 'normal');
+  doc.setFontSize(16);
+  doc.setTextColor(0, 255, 153);
+  doc.text('Relatório do Painel Hacker Moderno', 10, 10);
+  let y = 20;
+  
+  // Contas Bancárias
+  doc.setFontSize(14);
+  doc.text('Contas Bancárias:', 10, y);
+  y += 8;
+  const accounts = document.getElementById('accountsList').children;
+  if(accounts.length === 0) {
+    doc.setFontSize(12);
+    doc.text('Nenhuma conta cadastrada.', 10, y);
+    y += 10;
+  } else {
+    doc.setFontSize(12);
+    for(let acc of accounts) {
+      if(y > 280) {
+        doc.addPage();
+        y = 10;
+      }
+      doc.text(acc.textContent, 10, y);
+      y += 8;
+    }
+  }
+
+  // Links Capturados
+  y += 5;
+  doc.setFontSize(14);
+  doc.text('Links de Captura e Dados:', 10, y);
+  y += 8;
+  const tokens = Object.keys(captureData);
+  if(tokens.length === 0) {
+    doc.setFontSize(12);
+    doc.text('Nenhum link gerado.', 10, y);
+    y += 10;
+  } else {
+    doc.setFontSize(12);
+    tokens.forEach(token => {
+      if(y > 280) {
+        doc.addPage();
+        y = 10;
+      }
+      doc.text(`Link token: ${token}`, 10, y);
+      y += 8;
+      const data = captureData[token];
+      if(data.ips.length === 0) {
+        doc.text('  Nenhum dado capturado.', 12, y);
+        y += 8;
+      } else {
+        data.ips.forEach((ip, i) => {
+          if(y > 280) {
+            doc.addPage();
+            y = 10;
+          }
+          doc.text(`  IP #${i+1}: ${ip}`, 12, y);
+          y += 8;
+        });
+        data.userAgents.forEach((ua, i) => {
+          if(y > 280) {
+            doc.addPage();
+            y = 10;
+          }
+          doc.text(`  User Agent #${i+1}: ${ua}`, 12, y);
+          y += 8;
+        });
+      }
+    });
+  }
+
+  doc.save('relatorio_painel_hacker.pdf');
+}
+
+function clearData() {
+  document.getElementById('accountsList').innerHTML = '';
+  document.getElementById('linksList').innerHTML = '';
+  document.getElementById('accountBank').value = '';
+  document.getElementById('accountNumber').value = '';
+  document.getElementById('accountHolder').value = '';
+  // Limpa dados capturados
+  for (const key in captureData) delete captureData[key];
+}
+</script>
+
 </body>
 </html>
