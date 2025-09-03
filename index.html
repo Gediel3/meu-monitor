@@ -1,480 +1,233 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
+<!doctype html>
+<html lang="pt-br">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Painel Pegasus</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VIVER DE LIVES — Curso Completo</title>
+<meta name="description" content="Aprenda a ganhar dinheiro fazendo lives. Estratégias, equipamentos, roteiro, monetização e muito mais." />
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  font-family: 'Share Tech Mono', monospace;
+:root{
+  --bg:#0b0b12; --text:#E8E8F0; --muted:#B9B9C6;
+  --primary:#6d4aff; --primary-2:#3ec6ff; --accent:#a855f7;
+  --card:rgba(255,255,255,0.06); --stroke:rgba(255,255,255,0.12);
+  --shadow:0 10px 30px rgba(21,20,56,0.35); --hover-shadow:0 15px 40px rgba(21,20,56,0.45);
+  --radius:18px;
 }
-body, html {
-  height: 100%;
-  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-  color: #00ff99;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif;}
+body{background:var(--bg);color:var(--text);line-height:1.6;}
+a{text-decoration:none;color:inherit;}
+.container{max-width:1120px;margin:0 auto;padding:0 16px;}
+
+/* Header */
+header{position:sticky;top:0;background:rgba(10,10,19,0.85);backdrop-filter:blur(8px);padding:12px 0;z-index:100;}
+.nav-inner{display:flex;justify-content:space-between;align-items:center;}
+.brand{display:flex;align-items:center;gap:8px;}
+.brand .logo{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--primary),var(--primary-2));display:grid;place-items:center;box-shadow:var(--shadow);}
+.brand b{font-weight:800;font-size:1.2rem;}
+.menu{display:flex;gap:12px;align-items:center;}
+.menu a{padding:8px 12px;border-radius:8px;transition:0.3s;}
+.menu a.cta{background:linear-gradient(90deg,var(--primary),var(--primary-2));color:white;font-weight:700;}
+.menu a:hover{opacity:0.8;}
+.hamburger{display:none;flex-direction:column;gap:4px;cursor:pointer;}
+.hamburger div{width:25px;height:3px;background:white;border-radius:2px;}
+@media(max-width:768px){
+  .menu{position:absolute;top:60px;left:0;width:100%;flex-direction:column;background:rgba(10,10,19,0.95);display:none;}
+  .menu.show{display:flex;}
+  .hamburger{display:flex;}
 }
-.container {
-  width: 100%;
-  max-width: 480px;
-  background: rgba(0, 0, 0, 0.75);
-  border-radius: 10px;
-  box-shadow: 0 0 20px #00ff99;
-  padding: 20px;
-  backdrop-filter: blur(10px);
-  position: relative;
-  z-index: 1;
-  filter: brightness(1);
-}
-h2 {
-  text-align: center;
-  margin-bottom: 20px;
-  color: #00ff99;
-  text-shadow: 0 0 10px #00ff99;
-}
-input, button, textarea {
-  width: 100%;
-  padding: 12px;
-  margin-bottom: 15px;
-  border: 2px solid #00ff99;
-  border-radius: 6px;
-  background: transparent;
-  color: #00ff99;
-  font-size: 1rem;
-  outline: none;
-  transition: background-color 0.3s ease;
-}
-input:focus, textarea:focus {
-  background-color: #003822;
-}
-button {
-  cursor: pointer;
-  background: #00ff99;
-  color: #000;
-  font-weight: bold;
-  border: none;
-  box-shadow: 0 0 10px #00ff99;
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
-button:hover {
-  background: #009944;
-  color: #fff;
-}
-.hidden {
-  display: none;
-}
-.tabs {
-  display: flex;
-  justify-content: space-around;
-  margin-bottom: 20px;
-  border-bottom: 1px solid #00ff99;
-}
-.tab {
-  padding: 10px 20px;
-  cursor: pointer;
-  border-radius: 6px 6px 0 0;
-  background: transparent;
-  color: #00ff99;
-  box-shadow: inset 0 -3px 0 0 transparent;
-  transition: box-shadow 0.3s ease;
-  user-select: none;
-}
-.tab.active {
-  box-shadow: inset 0 -3px 0 0 #00ff99;
-  font-weight: bold;
-}
-#remoteControl button {
-  margin-bottom: 10px;
-}
-#accountsList div {
-  border: 1px solid #00ff99;
-  margin-bottom: 10px;
-  padding: 8px;
-}
-#linksList div {
-  border: 1px solid #00ff99;
-  margin-bottom: 10px;
-  padding: 8px;
-}
-.logout-btn {
-  background: transparent;
-  border: 1px solid #00ff99;
-  color: #00ff99;
-  width: auto;
-  padding: 6px 12px;
-  float: right;
-  margin-top: -10px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-.logout-btn:hover {
-  background-color: #009944;
-  color: #fff;
-}
-/* Animação fundo hacker */
-@keyframes matrixRain {
-  0% {
-    background-position: 0 0;
-  }
-  100% {
-    background-position: 0 100%;
-  }
-}
-body {
-  background-image: url('https://cdn.pixabay.com/photo/2017/08/30/23/52/code-2692105_960_720.jpg');
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;
-  animation: matrixRain 20s linear infinite;
-  filter: brightness(0.3);
-}
-/* Responsividade mobile */
-@media (max-width: 480px) {
-  .container {
-    max-width: 95%;
-    padding: 15px 10px;
-    box-shadow: none;
-    border-radius: 0;
-  }
-  
-  h2 {
-    font-size: 1.5rem;
-  }
-  
-  input, button, textarea {
-    font-size: 1rem;
-    padding: 10px;
-  }
-  
-  .tabs {
-    flex-direction: column;
-    gap: 8px;
-  }
-  
-  .tab {
-    text-align: center;
-    padding: 12px 0;
-    border-radius: 0;
-    box-shadow: inset 0 -3px 0 0 transparent;
-  }
-  
-  .tab.active {
-    box-shadow: inset 0 -3px 0 0 #00ff99;
-  }
-  
-  .logout-btn {
-    float: none;
-    width: 100%;
-    margin-top: 10px;
-  }
-}
+
+/* Hero */
+.hero{padding:60px 0;text-align:center;}
+.hero .badge{display:inline-block;padding:8px 16px;border-radius:999px;background:linear-gradient(90deg, rgba(109,74,255,.25), rgba(62,198,255,.25));border:1px solid var(--stroke);margin-bottom:12px;}
+.hero h1{font-size:clamp(2rem,5vw,3.25rem);}
+.hero p{max-width:600px;margin:12px auto;color:var(--muted);font-size:1rem;}
+.hero .cta-group{margin-top:20px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+.hero .cta-group a{padding:12px 24px;border-radius:999px;transition:0.3s;}
+.hero .cta-group a.cta-primary{background:linear-gradient(90deg,var(--primary),var(--primary-2));color:white;}
+.hero .cta-group a.cta-secondary{border:1px solid var(--stroke);color:white;background:transparent;}
+.video-wrap{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:var(--radius);}
+.video-wrap iframe{position:absolute;top:0;left:0;width:100%;height:100%;}
+
+/* Sections */
+.section{padding:50px 0;}
+.sec-head{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;margin-bottom:24px;}
+.sec-head h2{font-size:clamp(1.5rem,3vw,2rem);}
+.grid{display:grid;gap:20px;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));}
+.card{background:var(--card);padding:20px;border-radius:var(--radius);border:1px solid var(--stroke);box-shadow:var(--shadow);transition:0.3s;}
+.card:hover{transform:translateY(-3px);box-shadow:var(--hover-shadow);}
+.muted{color:var(--muted);}
+
+/* Instructor */
+.instructor{display:flex;flex-direction:column;align-items:center;text-align:center;gap:16px;margin-top:32px;}
+.instructor img{width:120px;height:120px;border-radius:50%;border:3px solid #fff;object-fit:cover;transition:0.3s;}
+.instructor img:hover{transform:scale(1.05);}
+
+/* Countdown / Promoção */
+#preco .card{padding:32px;background:linear-gradient(135deg,#6d4aff,#3ec6ff);border-radius:24px;box-shadow:0 20px 50px rgba(62,198,255,0.35);}
+#preco .countdown{font-size:1.5rem;font-weight:700;color:#fff;margin-bottom:20px;text-shadow:0 2px 8px rgba(0,0,0,0.5);}
+#preco .cta{font-size:1.25rem;padding:18px 28px;border-radius:999px;box-shadow:0 10px 30px rgba(0,0,0,0.3);transition:all 0.3s;animation:pulse 2s infinite;}
+@keyframes pulse{0%{transform:scale(1);}50%{transform:scale(1.03);}100%{transform:scale(1);}}
+
+/* Footer */
+footer{padding:24px 0;border-top:1px solid var(--stroke);display:flex;justify-content:space-between;flex-wrap:wrap;color:#bbb;}
+
+/* Sticky CTA */
+.sticky-cta{display:none;position:fixed;bottom:16px;left:0;width:100%;z-index:90;}
+.sticky-cta .inner{max-width:720px;margin:0 auto;padding:12px 16px;background:linear-gradient(90deg,var(--primary),var(--primary-2));border-radius:16px;display:flex;justify-content:space-between;align-items:center;color:white;}
+@media(max-width:768px){.sticky-cta{display:flex;}}
+
+/* Responsive adjustments */
+@media(max-width:720px){.hero{padding-top:34px;}}
 </style>
 </head>
 <body>
 
-<div class="container" id="loginContainer">
-  <h2>Login</h2>
-  <input type="text" id="loginUser" placeholder="Usuário" autocomplete="username" />
-  <input type="password" id="loginPass" placeholder="Senha" autocomplete="current-password" />
-  <button onclick="login()">Entrar</button>
-  <button onclick="showRegister()">Criar Conta</button>
+<!-- Header -->
+<header>
+  <div class="container nav-inner">
+    <a href="#top" class="brand">
+      <span class="logo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M8 5v14l11-7L8 5z" fill="#fff"/></svg></span>
+      <b>VIVER DE LIVES</b>
+    </a>
+    <div class="hamburger" onclick="toggleMenu()"><div></div><div></div><div></div></div>
+    <nav class="menu">
+      <a href="#conteudo">Conteúdo</a>
+      <a href="#bonus">Bônus</a>
+      <a href="#depoimentos">Depoimentos</a>
+      <a href="#instrutor">Instrutor</a>
+      <a href="#preco">Promoção</a>
+      <a href="#faq">Dúvidas</a>
+      <a href="#comprar" class="cta">Quero entrar agora</a>
+    </nav>
+  </div>
+</header>
+
+<!-- Hero -->
+<section class="hero" id="top">
+  <div class="container">
+    <span class="badge">Método exclusivo</span>
+    <h1>Transforme suas <span style="background:linear-gradient(90deg,var(--primary),var(--primary-2));-webkit-background-clip:text;color:transparent">lives</span> em um negócio real</h1>
+    <p>Aprenda passo a passo a criar, engajar e monetizar lives que geram autoridade, audiência e renda consistente.</p>
+    <div class="cta-group">
+      <a href="#comprar" class="cta-primary">Quero entrar agora</a>
+      <a href="#video" class="cta-secondary">Saiba Mais</a>
+    </div>
+    <div class="trust" style="margin-top:16px;color:var(--muted);">
+      <span>✅ Garantia 7 dias</span> • <span>⏱ Acesso imediato</span> • <span>🎧 Suporte exclusivo</span>
+    </div>
+    <div class="video-wrap" id="video" style="margin-top:20px;">
+      <iframe src="https://www.youtube.com/watch?v=PJjNfNhCmpM" allowfullscreen></iframe>
+    </div>
+  </div>
+</section>
+
+<!-- Conteúdo -->
+<section class="section" id="conteudo">
+  <div class="container">
+    <div class="sec-head"><h2>O que você vai aprender</h2></div>
+    <div class="grid">
+      <div class="card"><h3>Fundamentos & Mindset</h3><p class="muted">Descubra como pensar e agir como criador profissional de lives.</p></div>
+      <div class="card"><h3>Equipamentos & Setup</h3><p class="muted">Como ter imagem e som de qualidade gastando pouco.</p></div>
+      <div class="card"><h3>Engajamento & Audiência</h3><p class="muted">Estratégias para atrair e reter público fiel.</p></div>
+      <div class="card"><h3>Monetização</h3><p class="muted">Aprenda várias formas de ganhar dinheiro com suas lives.</p></div>
+      <div class="card"><h3>Planos de Crescimento</h3><p class="muted">Como escalar suas transmissões e criar renda previsível.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- Bônus -->
+<section class="section" id="bonus">
+  <div class="container">
+    <div class="sec-head"><h2>Bônus exclusivos</h2></div>
+    <div class="grid">
+      <div class="card"><h3>Modelos prontos</h3><p class="muted">Roteiros, checklists e templates de proposta para marcas.</p></div>
+      <div class="card"><h3>Comunidade</h3><p class="muted">Grupo no Telegram com suporte e networking.</p></div>
+      <div class="card"><h3>Mentoria</h3><p class="muted">Encontros ao vivo para análise e ajustes da sua estratégia.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- Depoimentos -->
+<section class="section" id="depoimentos">
+  <div class="container">
+    <div class="sec-head"><h2>Resultados dos alunos</h2></div>
+    <div class="grid">
+      <div class="card testimonial"><img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Aluno 1"><p class="muted">“Em 30 dias conquistei patrocinador para meu canal.”</p></div>
+      <div class="card testimonial"><img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Aluno 2"><p class="muted">“Agora minhas lives convertem em vendas todos os dias.”</p></div>
+      <div class="card testimonial"><img src="https://randomuser.me/api/portraits/men/56.jpg" alt="Aluno 3"><p class="muted">“Consegui viver só de lives em 3 meses aplicando o método.”</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- Instrutor -->
+<section class="section" id="instrutor">
+  <div class="container">
+    <div class="sec-head"><h2>Sobre o Instrutor</h2></div>
+    <div class="instructor">
+      <img src="ft1.jpg" alt="Instrutor">
+      <h3>Lucas Andrade</h3>
+      <p>Especialista em marketing digital e transmissões ao vivo. Com mais de 5 anos de experiência ajudando criadores e empresas a crescerem através de lives, reuni neste curso todas as estratégias que realmente funcionam para transformar sua audiência em renda.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Promoção -->
+<section class="section" id="preco">
+  <div class="container">
+    <div class="sec-head"><h2>Promoção por tempo limitado</h2></div>
+    <div class="card center">
+      <div class="countdown" id="countdown">Oferta expira em: 00d 00h 00m 00s</div>
+      <a id="comprar" href="https://hotmart.com" class="cta">Quero garantir minha vaga</a>
+      <p class="muted" style="margin-top:16px; color:#fff; opacity:0.85">Pagamento 100% seguro via Hotmart</p>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="section" id="faq">
+  <div class="container">
+    <div class="sec-head"><h2>Dúvidas frequentes</h2></div>
+    <details class="card"><summary>Tenho acesso vitalício?</summary><p class="muted">Sim, o acesso é vitalício e com todas as atualizações futuras.</p></details>
+    <details class="card"><summary>Serve para iniciantes?</summary><p class="muted">Com certeza, todo o curso é pensado para quem está começando.</p></details>
+    <details class="card"><summary>Posso ver no celular?</summary><p class="muted">Sim, assista de onde quiser: celular, tablet ou computador.</p></details>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <div class="container" style="display:flex; justify-content:space-between; flex-wrap:wrap">
+    <span class="muted">© <span id="y"></span> Viver de Lives</span>
+    <a href="#" class="muted">Suporte</a>
+  </div>
+</footer>
+
+<!-- Sticky CTA -->
+<div class="sticky-cta">
+  <div class="inner">
+    <div><b>VIVER DE LIVES</b><div style="font-size:.9rem; opacity:.85">Oferta por tempo limitado</div></div>
+    <a href="#comprar" class="cta" style="background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.3)">Entrar agora</a>
+  </div>
 </div>
 
-<div class="container hidden" id="registerContainer">
-  <h2>Registrar</h2>
-  <input type="text" id="regUser" placeholder="Usuário" autocomplete="username" />
-  <input type="password" id="regPass" placeholder="Senha" autocomplete="new-password" />
-  <button onclick="register()">Registrar</button>
-  <button onclick="showLogin()">Já tenho conta</button>
-</div>
-
-<div class="container hidden" id="dashboardContainer">
-  <button class="logout-btn" onclick="logout()">Sair</button>
-  <h2>Painel Hacker Moderno</h2>
-  <div class="tabs">
-    <div class="tab active" data-tab="remoteControl">Controle Remoto</div>
-    <div class="tab" data-tab="bankAccounts">Contas Bancárias</div>
-    <div class="tab" data-tab="devices">Links para Captura</div>
-  </div>
-
-  <div id="remoteControl" class="tab-content">
-    <h3>Controle Remoto (Simulado)</h3>
-    <button onclick="alert('Câmera ativada (simulado)')">Ativar Câmera</button>
-    <button onclick="alert('Microfone ativado (simulado)')">Ativar Microfone</button>
-    <button onclick="alert('Localização do dispositivo (simulado)')">Localizar Dispositivo</button>
-    <button onclick="alert('Bloquear dispositivo (simulado)')">Bloquear Dispositivo</button>
-    <button onclick="alert('Apagar dados do dispositivo (simulado)')">Apagar Dados</button>
-  </div>
-
-  <div id="bankAccounts" class="tab-content hidden">
-    <h3>Contas Bancárias</h3>
-    <div id="accountsList"></div>
-    <input type="text" id="accountBank" placeholder="Banco" />
-    <input type="text" id="accountNumber" placeholder="Número da Conta" />
-    <input type="text" id="accountHolder" placeholder="Titular" />
-    <button onclick="addBankAccount()">Adicionar Conta</button>
-  </div>
-
-  <div id="devices" class="tab-content hidden">
-    <h3>Links para Captura de IP e Dados</h3>
-    <button onclick="generateLink()">Gerar Link Único</button>
-    <div id="linksList" style="margin-top: 15px;"></div>
-  </div>
-
-  <button onclick="generatePDF()">Gerar Relatório PDF</button>
-</div>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
-// Tabs
-const tabs = document.querySelectorAll('.tab');
-const tabContents = document.querySelectorAll('.tab-content');
-tabs.forEach(tab => {
-  tab.addEventListener('click', () => {
-    tabs.forEach(t => t.classList.remove('active'));
-    tab.classList.add('active');
-    const target = tab.dataset.tab;
-    tabContents.forEach(tc => {
-      tc.classList.toggle('hidden', tc.id !== target);
-    });
-  });
-});
-
-// Login / Registro
-function showRegister() {
-  document.getElementById('loginContainer').classList.add('hidden');
-  document.getElementById('registerContainer').classList.remove('hidden');
+document.getElementById('y').textContent = new Date().getFullYear();
+// Toggle menu mobile
+function toggleMenu(){document.querySelector('.menu').classList.toggle('show');}
+// Countdown 10 minutos
+const countdown = document.getElementById('countdown');
+const deadline = new Date(Date.now() + 10*60*1000);
+function updateCountdown(){
+  const now = new Date();
+  const diff = deadline - now;
+  if(diff <= 0){countdown.textContent = "Oferta encerrada";return;}
+  const d=Math.floor(diff/(1000*60*60*24));
+  const h=Math.floor((diff%(1000*60*60*24))/(1000*60*60));
+  const m=Math.floor((diff%(1000*60*60))/(1000*60));
+  const s=Math.floor((diff%(1000*60))/1000);
+  countdown.textContent=`Oferta expira em: ${d}d ${h}h ${m}m ${s}s`;
 }
-function showLogin() {
-  document.getElementById('registerContainer').classList.add('hidden');
-  document.getElementById('loginContainer').classList.remove('hidden');
-}
-function register() {
-  const user = document.getElementById('regUser').value.trim();
-  const pass = document.getElementById('regPass').value.trim();
-  if(user && pass) {
-    localStorage.setItem('user', user);
-    localStorage.setItem('pass', pass);
-    alert('Usuário registrado! Faça login.');
-    showLogin();
-  } else {
-    alert('Preencha todos os campos!');
-  }
-}
-function login() {
-  const user = document.getElementById('loginUser').value.trim();
-  const pass = document.getElementById('loginPass').value.trim();
-  if(user === localStorage.getItem('user') && pass === localStorage.getItem('pass')) {
-    document.getElementById('loginContainer').classList.add('hidden');
-    document.getElementById('dashboardContainer').classList.remove('hidden');
-  } else {
-    alert('Usuário ou senha inválidos!');
-  }
-}
-function logout() {
-  document.getElementById('dashboardContainer').classList.add('hidden');
-  showLogin();
-  clearData();
-}
-
-// Contas bancárias
-function addBankAccount() {
-  const bank = document.getElementById('accountBank').value.trim();
-  const number = document.getElementById('accountNumber').value.trim();
-  const holder = document.getElementById('accountHolder').value.trim();
-  if(bank && number && holder) {
-    const container = document.getElementById('accountsList');
-    const div = document.createElement('div');
-    div.textContent = `Banco: ${bank} | Conta: ${number} | Titular: ${holder}`;
-    container.appendChild(div);
-    document.getElementById('accountBank').value = '';
-    document.getElementById('accountNumber').value = '';
-    document.getElementById('accountHolder').value = '';
-  } else {
-    alert('Preencha todos os campos das contas bancárias!');
-  }
-}
-
-// Dados para captura
-const captureData = {}; // token -> { ips: [], userAgents: [] }
-
-// Gerar link para captura de IP e dados
-function generateLink() {
-  const token = Math.random().toString(36).substring(2, 10);
-  // Link atualizado para disfarce.html para evitar abrir app nativo
-  const link = `${location.origin}/disfarce.html?token=${token}`;
-
-  captureData[token] = { ips: [], userAgents: [] };
-
-  const container = document.getElementById('linksList');
-  const div = document.createElement('div');
-  div.innerHTML = `
-    <strong>Link:</strong> <a href="${link}" target="_blank" rel="noopener noreferrer">${link}</a><br>
-    <button onclick="copyLink('${link}', this)">Copiar Link</button>
-    <button onclick="showCapturedData('${token}')">Mostrar Dados Capturados</button>
-    <div id="data-${token}" style="margin-top: 5px; font-size: 0.9rem;"></div>
-    <hr>
-  `;
-  container.appendChild(div);
-}
-
-// Copiar link e mostrar mensagem
-function copyLink(link, btn) {
-  navigator.clipboard.writeText(link).then(() => {
-    btn.textContent = 'Link copiado! Envie para a vítima.';
-    setTimeout(() => {
-      btn.textContent = 'Link copiado! Vítima conectada.';
-    }, 3000);
-    setTimeout(() => {
-      btn.textContent = 'Copiar Link';
-    }, 6000);
-  }).catch(() => {
-    alert('Erro ao copiar link.');
-  });
-}
-
-// Mostrar dados capturados no painel
-function showCapturedData(token) {
-  const dataDiv = document.getElementById(`data-${token}`);
-  const data = captureData[token];
-  if (!data || (data.ips.length === 0 && data.userAgents.length === 0)) {
-    dataDiv.innerHTML = '<em>Nenhum dado capturado ainda.</em>';
-    return;
-  }
-
-  let html = '<strong>IPs Capturados:</strong><br>';
-  data.ips.forEach((ip, i) => {
-    html += `#${i+1}: ${ip} <br>`;
-  });
-
-  html += '<br><strong>User Agents:</strong><br>';
-  data.userAgents.forEach((ua, i) => {
-    html += `#${i+1}: ${ua} <br>`;
-  });
-
-  dataDiv.innerHTML = html;
-}
-
-// Gerar PDF
-async function generatePDF() {
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF();
-  doc.setFont('courier', 'normal');
-  doc.setFontSize(16);
-  doc.setTextColor(0, 255, 153);
-  doc.text('Relatório do Painel Hacker Moderno', 10, 10);
-  let y = 20;
-  
-  // Contas Bancárias
-  doc.setFontSize(14);
-  doc.text('Contas Bancárias:', 10, y);
-  y += 8;
-  const accounts = document.getElementById('accountsList').children;
-  if(accounts.length === 0) {
-    doc.setFontSize(12);
-    doc.text('Nenhuma conta cadastrada.', 10, y);
-    y += 10;
-  } else {
-    doc.setFontSize(12);
-    for(let acc of accounts) {
-      if(y > 280) {
-        doc.addPage();
-        y = 10;
-      }
-      doc.text(acc.textContent, 10, y);
-      y += 8;
-    }
-  }
-
-  // Links Capturados
-  y += 5;
-  doc.setFontSize(14);
-  doc.text('Links de Captura e Dados:', 10, y);
-  y += 8;
-  const tokens = Object.keys(captureData);
-  if(tokens.length === 0) {
-    doc.setFontSize(12);
-    doc.text('Nenhum link gerado.', 10, y);
-    y += 10;
-  } else {
-    doc.setFontSize(12);
-    tokens.forEach(token => {
-      if(y > 280) {
-        doc.addPage();
-        y = 10;
-      }
-      doc.text(`Link token: ${token}`, 10, y);
-      y += 8;
-      const data = captureData[token];
-      if(data.ips.length === 0) {
-        doc.text('  Nenhum dado capturado.', 12, y);
-        y += 8;
-      } else {
-        data.ips.forEach((ip, i) => {
-          if(y > 280) {
-            doc.addPage();
-            y = 10;
-          }
-          doc.text(`  IP #${i+1}: ${ip}`, 12, y);
-          y += 8;
-        });
-        data.userAgents.forEach((ua, i) => {
-          if(y > 280) {
-            doc.addPage();
-            y = 10;
-          }
-          doc.text(`  User Agent #${i+1}: ${ua}`, 12, y);
-          y += 8;
-        });
-      }
-    });
-  }
-
-  doc.save('relatorio_painel_hacker.pdf');
-}
-
-function clearData() {
-  document.getElementById('accountsList').innerHTML = '';
-  document.getElementById('linksList').innerHTML = '';
-  document.getElementById('accountBank').value = '';
-  document.getElementById('accountNumber').value = '';
-  document.getElementById('accountHolder').value = '';
-  // Limpa dados capturados
-  for (const key in captureData) delete captureData[key];
-}
-
-// Captura dados ao acessar link com token
-window.addEventListener('load', () => {
-  const urlParams = new URLSearchParams(window.location.search);
-  const token = urlParams.get('token');
-
-  if (token && captureData[token]) {
-    fetch('https://api.ipify.org?format=json')
-      .then(res => res.json())
-      .then(data => {
-        captureData[token].ips.push(data.ip);
-        captureData[token].userAgents.push(navigator.userAgent);
-
-        // Mostrar botão fechar simples para vítima
-        document.body.innerHTML = `
-          <div style="background:#000; color:#0f0; font-family: monospace; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; text-align: center;">
-            <h2>Dados capturados com sucesso!</h2>
-            <button onclick="window.location.href='about:blank'; window.close();">Fechar</button>
-          </div>
-        `;
-      })
-      .catch(() => {
-        document.body.innerHTML = `<p style="color:#0f0; text-align:center; margin-top: 50px;">Erro ao capturar IP.</p>`;
-      });
-  }
-});
+setInterval(updateCountdown,1000);
+updateCountdown();
 </script>
-
 </body>
 </html>
