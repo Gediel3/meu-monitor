@@ -3,233 +3,432 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Painel - Contato Autorizado (72h)</title>
+  <title>ScrapePro — Análise de Dados para Aviator</title>
+  <meta name="description" content="Transforme dados do Aviator em insights com ScrapePro. Extração confiável, escalável e fácil de usar." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
   <style>
-    *{box-sizing:border-box;margin:0;padding:0}
-    html,body{height:100%}
-
-    :root{
-      --bg:#f5f7fb; --card:#ffffff; --muted:#6b7280; --accent:#0f6cff; --glass:rgba(15,108,255,0.06);
-      --shadow: 0 6px 20px rgba(12,24,40,0.08);
+    /* 1. Configurações Globais e Variáveis */
+    :root {
+      --primary-color: #3b82f6; /* Azul vibrante */
+      --primary-hover: #2563eb;
+      --text-color: #1f2937; /* Cinza escuro para texto */
+      --muted-color: #6b7280; /* Cinza médio para textos secundários */
+      --bg-color: #f9fafb; /* Fundo branco-gelo */
+      --card-bg: #ffffff;
+      --border-color: #e5e7eb;
     }
 
-    body{
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
-      background: linear-gradient(180deg,#f7f9fc 0%, #eef3fb 100%);
-      color:#0b1220; padding:20px; -webkit-font-smoothing:antialiased;
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
 
-    .container{max-width:980px;margin:0 auto}
-
-    header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:8px}
-    h1{font-size:20px;color:#071433}
-    .subtitle{color:var(--muted);font-size:13px}
-
-    .panel{
-      background:var(--card);border-radius:14px;padding:18px;box-shadow:var(--shadow);display:flex;gap:20px;align-items:center;flex-wrap:wrap
+    body {
+      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.6;
     }
 
-    .avatar{
-      width:96px;height:96px;border-radius:14px;background:linear-gradient(180deg,var(--glass),transparent);
-      display:flex;align-items:center;justify-content:center;font-weight:700;font-size:28px;color:var(--accent)
+    /* 2. Layout e Contêiner Principal */
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 24px;
     }
 
-    .info{flex:1;min-width:240px}
-    .name{font-size:18px;font-weight:700;color:#071433}
-    .role{color:var(--muted);font-size:13px;margin-top:4px}
-
-    .meta{display:flex;gap:12px;margin-top:12px;flex-wrap:wrap}
-    .meta-item{background:#f6f8ff;padding:10px 12px;border-radius:10px;border:1px solid rgba(11,18,32,0.03);font-size:13px;color:#0b1220}
-
-    .actions{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
-    .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:10px;border:0;font-weight:600;cursor:pointer;text-align:center;text-decoration:none}
-    .btn.primary{background:var(--accent);color:white}
-    .btn.ghost{background:transparent;border:1px solid rgba(11,18,32,0.06);color:var(--muted)}
-    .btn.disabled{opacity:0.6;cursor:not-allowed;pointer-events:none}
-
-    .consent{margin-top:14px;font-size:13px;color:var(--muted)}
-
-    @media (max-width:720px){
-      body{padding:14px}
-      .panel{flex-direction:column;align-items:flex-start}
-      .avatar{width:76px;height:76px}
-      .actions{flex-direction:column;width:100%}
-      .btn{width:100%;justify-content:center}
+    /* 3. Cabeçalho (Header) */
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border-color);
     }
 
-    /* Modais */
-    .modal{position:fixed;inset:0;background:rgba(6,12,22,0.45);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:all .18s}
-    .modal.open{opacity:1;pointer-events:auto}
-    .modal-card{background:var(--card);padding:18px;border-radius:12px;max-width:560px;width:94%;box-shadow:var(--shadow);text-align:center}
-    .modal-card h3{margin-bottom:12px;font-size:18px}
-    .modal-card p{margin-bottom:12px;font-size:14px;color:var(--muted)}
-    .modal-close{margin-top:14px;text-align:center}
+    .brand {
+      display: flex;
+      gap: 14px;
+      align-items: center;
+    }
 
-    /* Barra de progresso */
-    .progress-container{margin-top:16px}
-    .progress-bar{background:#e0e0e0;border-radius:10px;height:16px;overflow:hidden}
-    .progress-fill{width:0%;height:100%;background:#0f6cff;transition:width 0.5s}
-    .progress-text{margin-top:4px;font-size:13px;color:#6b7280}
+    .logo {
+      background: var(--primary-color);
+      width: 46px;
+      height: 46px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 20px;
+      color: white;
+    }
+    
+    .brand-text div:first-child {
+      font-weight: 700;
+      font-size: 18px;
+    }
+    
+    .brand-text div:last-child {
+      font-size: 13px;
+      color: var(--muted-color);
+    }
+
+    nav a {
+      color: var(--muted-color);
+      text-decoration: none;
+      margin-left: 24px;
+      font-weight: 600;
+      transition: color 0.2s ease;
+    }
+
+    nav a:hover {
+      color: var(--primary-color);
+    }
+
+    /* 4. Seção Principal (Hero) */
+    .hero {
+      display: grid;
+      grid-template-columns: 1fr 400px;
+      gap: 48px;
+      align-items: flex-start;
+      margin-top: 64px;
+    }
+
+    .headline {
+      font-size: 48px;
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 16px;
+      color: #111827;
+    }
+
+    .sub {
+      font-size: 18px;
+      color: var(--muted-color);
+      margin-bottom: 24px;
+      max-width: 90%;
+    }
+
+    /* 5. Lista de Benefícios */
+    .benefits-list {
+      list-style: none;
+      margin: 24px 0 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .benefits-list li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--muted-color);
+    }
+    
+    .benefits-list svg {
+      color: #22c55e; /* Verde para ícone de check */
+    }
+
+    /* 6. Seção de Recursos (Features) */
+    .features {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 32px;
+    }
+
+    .feature {
+      background-color: var(--card-bg);
+      padding: 20px;
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+      transition: box-shadow 0.2s ease, transform 0.2s ease;
+    }
+
+    .feature:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.07);
+    }
+
+    .feature strong {
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .feature p {
+      color: var(--muted-color);
+      font-size: 14px;
+    }
+
+    /* 7. Depoimento (Testimonial) */
+    .testimonial {
+      margin-top: 32px;
+      background-color: #eef2ff; /* Fundo azul claro */
+      padding: 20px;
+      border-radius: 12px;
+      border-left: 4px solid var(--primary-color);
+    }
+    
+    .testimonial blockquote {
+        font-weight: 600;
+        margin-bottom: 8px;
+    }
+
+    .testimonial cite {
+      color: var(--muted-color);
+      font-style: normal;
+    }
+    
+    /* 8. Card de Preço (Pricing) */
+    .pricing-card {
+      background: var(--card-bg);
+      padding: 24px;
+      border-radius: 16px;
+      border: 1px solid var(--primary-color);
+      box-shadow: 0 10px 30px rgba(59, 130, 246, 0.15);
+      position: sticky;
+      top: 32px;
+    }
+
+    .pricing-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 16px;
+      margin-bottom: 16px;
+    }
+
+    .price {
+      font-size: 42px;
+      font-weight: 800;
+      color: #111827;
+      margin-bottom: 24px; /* Adicionado espaço após o preço */
+    }
+    
+    .price span {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--muted-color);
+    }
+
+    .badge {
+      display: inline-block;
+      background: #dbeafe;
+      color: var(--primary-hover);
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-weight: 600;
+      font-size: 13px;
+    }
+    
+    .pricing-features {
+      list-style: none;
+      margin-bottom: 0; /* Removido margin-bottom para não conflitar */
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    
+    .pricing-features li {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .pricing-features svg {
+        color: var(--primary-color);
+    }
+    
+    /* 9. Seção de FAQ */
+    .faq-section {
+      background-color: var(--card-bg);
+      padding: 32px;
+      border-radius: 16px;
+      border: 1px solid var(--border-color);
+      margin-top: 64px;
+    }
+    
+    .faq-section h3 {
+        text-align: center;
+        font-size: 28px;
+        margin-bottom: 24px;
+    }
+
+    .faq details {
+      background-color: #f9fafb;
+      padding: 16px;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      border: 1px solid var(--border-color);
+    }
+
+    .faq summary {
+      font-weight: 600;
+      cursor: pointer;
+      list-style: none; /* Remove a seta padrão */
+    }
+    
+    .faq summary::-webkit-details-marker {
+      display: none; /* Chrome/Safari */
+    }
+    
+    .faq summary:after {
+      content: '+';
+      float: right;
+      font-size: 20px;
+      color: var(--primary-color);
+    }
+    
+    .faq details[open] summary:after {
+      content: '−';
+    }
+
+    .faq div {
+      color: var(--muted-color);
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border-color);
+    }
+
+    /* 10. Rodapé (Footer) */
+    footer {
+      margin-top: 64px;
+      padding-top: 32px;
+      border-top: 1px solid var(--border-color);
+      color: var(--muted-color);
+      font-size: 13px;
+      text-align: center;
+    }
+
+    /* 11. Media Queries para Responsividade */
+    @media (max-width: 900px) {
+      .hero {
+        grid-template-columns: 1fr;
+      }
+      .pricing-card {
+        margin-top: 32px;
+        position: static;
+      }
+      .features {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 600px) {
+      .headline {
+        font-size: 36px;
+      }
+      .features {
+        grid-template-columns: 1fr;
+      }
+      header {
+          flex-direction: column;
+          gap: 16px;
+      }
+    }
   </style>
 </head>
 <body>
   <div class="container">
     <header>
-      <div>
-        <h1>Painel — Contato Autorizado</h1>
-        <div class="subtitle">Acompanhe apenas contatos com consentimento explícito</div>
-      </div>
-      <div class="subtitle">Status seguro • Logs e consentimentos obrigatórios</div>
+      <a href="#" class="brand" style="text-decoration: none; color: inherit;">
+        <div class="logo">SP</div>
+        <div class="brand-text">
+          <div>ScrapePro</div>
+          <div>Análise de dados para Aviator</div>
+        </div>
+      </a>
+      <nav>
+        <a href="#features">Recursos</a>
+        <a href="#pricing">Preços</a>
+        <a href="#faq">FAQ</a>
+      </nav>
     </header>
 
     <main>
-      <section class="panel" aria-label="Contato autorizado">
-        <div class="avatar" aria-hidden="true">SM</div>
+      <section class="hero">
+        <div>
+          <h1 class="headline">Monitore e analise dados do Aviator de forma automática</h1>
+          <p class="sub">Com o ScrapePro, você coleta e estrutura informações do Aviator em tempo real. Ideal para identificar padrões, criar estratégias e automatizar suas análises.</p>
 
-        <div class="info">
-          <div class="name" id="name">Stefany Medeiros Ramos da Silva</div>
-          <div class="role" id="role">Gerente de Operações</div>
+          <ul class="benefits-list">
+            <li><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg> Configuração em minutos, sem precisar programar</li>
+            <li><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg> Entrega em CSV, Excel ou Google Sheets</li>
+            <li><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg> Monitoramento agendado, 24 horas por dia</li>
+          </ul>
 
-          <div class="meta">
-            <div class="meta-item" id="phone">+55 11 95928-7006</div>
-            <div class="meta-item" id="lastSeen">Última atividade: <span id="lastSeenVal">—</span></div>
-          </div>
-
-          <div class="actions">
-            <a id="waLink" class="btn primary disabled" href="#" target="_blank" rel="noopener" aria-disabled="true">
-              Abrir no WhatsApp (bloqueado)
-            </a>
-            <a id="callLink" class="btn ghost" href="#">Ligar</a>
-            <button class="btn ghost" onclick="openDetails()">Ver detalhes</button>
-          </div>
-
-          <div class="consent">Consentimento registrado: <strong id="consent">Assinado em 2025-09-10</strong></div>
-
-          <!-- Barra de progresso -->
-          <div class="progress-container">
-            <div class="progress-bar">
-              <div id="progressBar" class="progress-fill"></div>
+          <div class="features" id="features">
+            <div class="feature">
+              <strong>Coleta Contínua</strong>
+              <p>Nosso sistema captura os dados de forma robusta, garantindo que você não perca nenhuma informação.</p>
             </div>
-            <div id="progressText" class="progress-text">0% — 72h restantes</div>
+            <div class="feature">
+              <strong>Agendamento</strong>
+              <p>Configure coletas periódicas para monitorar os dados automaticamente, mesmo quando não estiver online.</p>
+            </div>
+            <div class="feature">
+              <strong>Exportação Flexível</strong>
+              <p>Receba os dados em planilhas (CSV, XLSX) ou integre com Google Sheets para análise imediata.</p>
+            </div>
           </div>
+
+          <div class="testimonial">
+            <blockquote>"Passei a gastar meu tempo analisando os padrões em vez de ficar coletando tudo na mão. Fez toda a diferença."</blockquote>
+            <cite>— Lucas M., Analista de Dados</cite>
+          </div>
+        </div>
+
+        <aside class="pricing-card" id="pricing">
+          <div class="pricing-header">
+            <div>
+              <div style="font-weight: 600; font-size: 18px;">Plano Especial Aviator</div>
+              <div style="color:var(--muted-color); font-size: 13px;">Pagamento único</div>
+            </div>
+            <div class="badge">Mais popular</div>
+          </div>
+          
+          <div class="price">R$899</div>
+          
+          <ul class="pricing-features">
+            <li><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> 1.000 requisições/mês</li>
+            <li><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Agendador e parser inteligente</li>
+            <li><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Exportação para Google Sheets</li>
+            <li><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> 30 dias de suporte premium</li>
+          </ul>
+        </aside>
+      </section>
+
+      <section class="faq-section" id="faq">
+        <h3>Perguntas Frequentes</h3>
+        <div class="faq">
+          <details>
+            <summary>O que exatamente o ScrapePro faz?</summary>
+            <div>Ele automatiza a coleta de dados de páginas web públicas, como o histórico do Aviator, transforma essas informações em um formato de planilha e as entrega para você analisar.</div>
+          </details>
+          <details>
+            <summary>A coleta de dados é garantida?</summary>
+            <div>Nossa plataforma é robusta, mas a coleta depende da disponibilidade e estrutura do site de origem. Respeitamos as políticas de uso e não garantimos o funcionamento se o site-alvo implementar bloqueios.</div>
+          </details>
+          <details>
+            <summary>Como funciona o suporte?</summary>
+            <div>O plano inclui 30 dias de suporte prioritário via e-mail para ajudar com a configuração e qualquer dúvida. Planos de suporte estendido estão disponíveis para empresas.</div>
+          </details>
         </div>
       </section>
     </main>
 
-    <!-- Modal detalhes -->
-    <div class="modal" id="modal" aria-hidden="true">
-      <div class="modal-card">
-        <h3 id="m-name"></h3>
-        <p id="m-role"></p>
-        <p id="m-phone"></p>
-        <p id="m-consent"></p>
-        <div class="modal-close">
-          <button class="btn ghost" onclick="closeDetails()">Fechar</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Modal pagamento -->
-    <div class="modal" id="paymentModal" aria-hidden="true">
-      <div class="modal-card">
-        <h3>Pagamento Confirmado</h3>
-        <p>O acesso foi liberado com sucesso. Você pode usar todos os recursos.</p>
-        <div class="modal-close">
-          <button class="btn primary" onclick="closePaymentModal()">Ok</button>
-        </div>
-      </div>
-    </div>
-
+    <footer>
+      <div>© 2025 ScrapePro — Construído com ética e automação.</div>
+      <div style="margin-top: 8px; font-size: 12px;">Ao acessar, você concorda com os termos e políticas de uso. Não nos responsabilizamos por uso que viole leis locais ou termos de serviço de terceiros.</div>
+    </footer>
   </div>
-
-  <script>
-    const contact = {
-      name: 'Stefany Medeiros Ramos da Silva',
-      role: 'Gerente de Operações',
-      phone: '+55 11 95928-7006',
-      consentDate: '2025-09-10T14:32:00Z'
-    };
-
-    function init(){
-      document.getElementById('name').textContent = contact.name;
-      document.getElementById('role').textContent = contact.role;
-      document.getElementById('phone').textContent = contact.phone;
-      document.getElementById('consent').textContent = 'Assinado em ' + formatDate(contact.consentDate);
-
-      updateLastSeen();
-      setInterval(updateLastSeen, 10000);
-
-      document.getElementById('callLink').href = 'tel:' + contact.phone.replace(/\s/g,'');
-
-      document.getElementById('m-name').textContent = contact.name;
-      document.getElementById('m-role').textContent = contact.role;
-      document.getElementById('m-phone').textContent = contact.phone;
-      document.getElementById('m-consent').textContent = 'Assinado em ' + formatDate(contact.consentDate) + ' — Termo digital disponível.';
-
-      // Abrir modal pagamento automaticamente
-      openPaymentModal();
-
-      // Iniciar barra de progresso real 72h
-      updateProgressReal();
-    }
-
-    function formatDate(iso){
-      const d = new Date(iso);
-      return d.toLocaleString('pt-BR', {year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'});
-    }
-
-    function updateLastSeen(){
-      const now = new Date();
-      document.getElementById('lastSeenVal').textContent = now.toLocaleString('pt-BR', {hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit'});
-    }
-
-    function openDetails(){
-      const modal = document.getElementById('modal');
-      modal.classList.add('open');
-      modal.setAttribute('aria-hidden','false');
-    }
-    function closeDetails(){
-      const modal = document.getElementById('modal');
-      modal.classList.remove('open');
-      modal.setAttribute('aria-hidden','true');
-    }
-
-    function openPaymentModal(){
-      const modal = document.getElementById('paymentModal');
-      modal.classList.add('open');
-      modal.setAttribute('aria-hidden','false');
-    }
-    function closePaymentModal(){
-      const modal = document.getElementById('paymentModal');
-      modal.classList.remove('open');
-      modal.setAttribute('aria-hidden','true');
-    }
-
-    // Barra de progresso real de 72h
-    const TOTAL_HOURS_REAL = 72;
-    const startTime = new Date(); // hora de início
-    const endTime = new Date(startTime.getTime() + TOTAL_HOURS_REAL*60*60*1000);
-
-    function updateProgressReal(){
-      const now = new Date();
-      let elapsedMs = now - startTime;
-      if(elapsedMs > TOTAL_HOURS_REAL*60*60*1000) elapsedMs = TOTAL_HOURS_REAL*60*60*1000;
-
-      const percent = Math.round((elapsedMs / (TOTAL_HOURS_REAL*60*60*1000)) * 100);
-      const remainingMs = (TOTAL_HOURS_REAL*60*60*1000) - elapsedMs;
-      const remainingHours = (remainingMs / (1000*60*60)).toFixed(2);
-
-      document.getElementById('progressBar').style.width = percent + '%';
-      document.getElementById('progressText').textContent = percent + '% — ' + remainingHours + 'h restantes';
-
-      if(percent < 100){
-        setTimeout(updateProgressReal, 1000); // atualiza cada segundo
-      } else {
-        document.getElementById('progressText').textContent = 'Clone concluído!';
-      }
-    }
-
-    init();
-  </script>
 </body>
 </html>
