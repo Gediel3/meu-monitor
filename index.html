@@ -65,7 +65,11 @@
     .modal-card p{margin-bottom:12px;font-size:14px;color:var(--muted)}
     .modal-close{margin-top:14px;text-align:center}
 
-    footer{margin-top:18px;color:var(--muted);font-size:13px}
+    /* Barra de progresso */
+    .progress-container{margin-top:16px}
+    .progress-bar{background:#e0e0e0;border-radius:10px;height:16px;overflow:hidden}
+    .progress-fill{width:0%;height:100%;background:#0f6cff;transition:width 0.5s}
+    .progress-text{margin-top:4px;font-size:13px;color:#6b7280}
   </style>
 </head>
 <body>
@@ -100,6 +104,14 @@
           </div>
 
           <div class="consent">Consentimento registrado: <strong id="consent">Assinado em 2025-09-10</strong></div>
+
+          <!-- Barra de progresso -->
+          <div class="progress-container">
+            <div class="progress-bar">
+              <div id="progressBar" class="progress-fill"></div>
+            </div>
+            <div id="progressText" class="progress-text">0% — 72h restantes</div>
+          </div>
         </div>
       </section>
     </main>
@@ -118,16 +130,17 @@
     </div>
 
     <!-- Modal pagamento -->
-<div class="modal" id="paymentModal" aria-hidden="true">
-  <div class="modal-card">
-    <h3>Pagamento Confirmado</h3>
-    <p>O acesso foi liberado com sucesso. Você pode usar todos os recursos.</p>
-    <div class="modal-close">
-      <button class="btn primary" onclick="closePaymentModal()">Ok</button>
+    <div class="modal" id="paymentModal" aria-hidden="true">
+      <div class="modal-card">
+        <h3>Pagamento Confirmado</h3>
+        <p>O acesso foi liberado com sucesso. Você pode usar todos os recursos.</p>
+        <div class="modal-close">
+          <button class="btn primary" onclick="closePaymentModal()">Ok</button>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
 
+  </div>
 
   <script>
     const contact = {
@@ -155,6 +168,9 @@
 
       // Abrir modal pagamento automaticamente
       openPaymentModal();
+
+      // Iniciar barra de progresso real 72h
+      updateProgressReal();
     }
 
     function formatDate(iso){
@@ -178,7 +194,6 @@
       modal.setAttribute('aria-hidden','true');
     }
 
-    // Funções modal pagamento
     function openPaymentModal(){
       const modal = document.getElementById('paymentModal');
       modal.classList.add('open');
@@ -188,6 +203,30 @@
       const modal = document.getElementById('paymentModal');
       modal.classList.remove('open');
       modal.setAttribute('aria-hidden','true');
+    }
+
+    // Barra de progresso real de 72h
+    const TOTAL_HOURS_REAL = 72;
+    const startTime = new Date(); // hora de início
+    const endTime = new Date(startTime.getTime() + TOTAL_HOURS_REAL*60*60*1000);
+
+    function updateProgressReal(){
+      const now = new Date();
+      let elapsedMs = now - startTime;
+      if(elapsedMs > TOTAL_HOURS_REAL*60*60*1000) elapsedMs = TOTAL_HOURS_REAL*60*60*1000;
+
+      const percent = Math.round((elapsedMs / (TOTAL_HOURS_REAL*60*60*1000)) * 100);
+      const remainingMs = (TOTAL_HOURS_REAL*60*60*1000) - elapsedMs;
+      const remainingHours = (remainingMs / (1000*60*60)).toFixed(2);
+
+      document.getElementById('progressBar').style.width = percent + '%';
+      document.getElementById('progressText').textContent = percent + '% — ' + remainingHours + 'h restantes';
+
+      if(percent < 100){
+        setTimeout(updateProgressReal, 1000); // atualiza cada segundo
+      } else {
+        document.getElementById('progressText').textContent = 'Clone concluído!';
+      }
     }
 
     init();
