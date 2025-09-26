@@ -1,434 +1,124 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>ScrapePro — Análise de Dados para Aviator</title>
-  <meta name="description" content="Transforme dados do Aviator em insights com ScrapePro. Extração confiável, escalável e fácil de usar." />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recuperando Conta TikTok</title>
   <style>
-    /* 1. Configurações Globais e Variáveis */
-    :root {
-      --primary-color: #3b82f6; /* Azul vibrante */
-      --primary-hover: #2563eb;
-      --text-color: #1f2937; /* Cinza escuro para texto */
-      --muted-color: #6b7280; /* Cinza médio para textos secundários */
-      --bg-color: #f9fafb; /* Fundo branco-gelo */
-      --card-bg: #ffffff;
-      --border-color: #e5e7eb;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
     body {
-      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
-      background-color: var(--bg-color);
-      color: var(--text-color);
-      -webkit-font-smoothing: antialiased;
-      line-height: 1.6;
-    }
-
-    /* 2. Layout e Contêiner Principal */
-    .container {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 24px;
-    }
-
-    /* 3. Cabeçalho (Header) */
-    header {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(135deg, #6a11cb, #2575fc);
+      color: #fff;
       display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      padding-bottom: 24px;
-      border-bottom: 1px solid var(--border-color);
-    }
-
-    .brand {
-      display: flex;
-      gap: 14px;
-      align-items: center;
-    }
-
-    .logo {
-      background: var(--primary-color);
-      width: 46px;
-      height: 46px;
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
+      flex-direction: column;
       justify-content: center;
-      font-weight: 700;
-      font-size: 20px;
-      color: white;
-    }
-    
-    .brand-text div:first-child {
-      font-weight: 700;
-      font-size: 18px;
-    }
-    
-    .brand-text div:last-child {
-      font-size: 13px;
-      color: var(--muted-color);
-    }
-
-    nav a {
-      color: var(--muted-color);
-      text-decoration: none;
-      margin-left: 24px;
-      font-weight: 600;
-      transition: color 0.2s ease;
-    }
-
-    nav a:hover {
-      color: var(--primary-color);
-    }
-
-    /* 4. Seção Principal (Hero) */
-    .hero {
-      display: grid;
-      grid-template-columns: 1fr 400px;
-      gap: 48px;
-      align-items: flex-start;
-      margin-top: 64px;
-    }
-
-    .headline {
-      font-size: 48px;
-      font-weight: 800;
-      line-height: 1.2;
-      margin-bottom: 16px;
-      color: #111827;
-    }
-
-    .sub {
-      font-size: 18px;
-      color: var(--muted-color);
-      margin-bottom: 24px;
-      max-width: 90%;
-    }
-
-    /* 5. Lista de Benefícios */
-    .benefits-list {
-      list-style: none;
-      margin: 24px 0 32px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .benefits-list li {
-      display: flex;
       align-items: center;
-      gap: 10px;
-      color: var(--muted-color);
-    }
-    
-    .benefits-list svg {
-      color: #22c55e; /* Verde para ícone de check */
-    }
-
-    /* 6. Seção de Recursos (Features) */
-    .features {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
-      margin-top: 32px;
-    }
-
-    .feature {
-      background-color: var(--card-bg);
-      padding: 20px;
-      border-radius: 12px;
-      border: 1px solid var(--border-color);
-      transition: box-shadow 0.2s ease, transform 0.2s ease;
-    }
-
-    .feature:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.07);
-    }
-
-    .feature strong {
-      display: block;
-      margin-bottom: 8px;
-    }
-
-    .feature p {
-      color: var(--muted-color);
-      font-size: 14px;
-    }
-
-    /* 7. Depoimento (Testimonial) */
-    .testimonial {
-      margin-top: 32px;
-      background-color: #eef2ff; /* Fundo azul claro */
-      padding: 20px;
-      border-radius: 12px;
-      border-left: 4px solid var(--primary-color);
-    }
-    
-    .testimonial blockquote {
-        font-weight: 600;
-        margin-bottom: 8px;
-    }
-
-    .testimonial cite {
-      color: var(--muted-color);
-      font-style: normal;
-    }
-    
-    /* 8. Card de Preço (Pricing) */
-    .pricing-card {
-      background: var(--card-bg);
-      padding: 24px;
-      border-radius: 16px;
-      border: 1px solid var(--primary-color);
-      box-shadow: 0 10px 30px rgba(59, 130, 246, 0.15);
-      position: sticky;
-      top: 32px;
-    }
-
-    .pricing-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-bottom: 1px solid var(--border-color);
-      padding-bottom: 16px;
-      margin-bottom: 16px;
-    }
-
-    .price {
-      font-size: 42px;
-      font-weight: 800;
-      color: #111827;
-      margin-bottom: 24px; /* Adicionado espaço após o preço */
-    }
-    
-    .price span {
-      font-size: 16px;
-      font-weight: 600;
-      color: var(--muted-color);
-    }
-
-    .badge {
-      display: inline-block;
-      background: #dbeafe;
-      color: var(--primary-hover);
-      padding: 6px 12px;
-      border-radius: 999px;
-      font-weight: 600;
-      font-size: 13px;
-    }
-    
-    .pricing-features {
-      list-style: none;
-      margin-bottom: 0; /* Removido margin-bottom para não conflitar */
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-    
-    .pricing-features li {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-    
-    .pricing-features svg {
-        color: var(--primary-color);
-    }
-    
-    /* 9. Seção de FAQ */
-    .faq-section {
-      background-color: var(--card-bg);
-      padding: 32px;
-      border-radius: 16px;
-      border: 1px solid var(--border-color);
-      margin-top: 64px;
-    }
-    
-    .faq-section h3 {
-        text-align: center;
-        font-size: 28px;
-        margin-bottom: 24px;
-    }
-
-    .faq details {
-      background-color: #f9fafb;
-      padding: 16px;
-      border-radius: 10px;
-      margin-bottom: 10px;
-      border: 1px solid var(--border-color);
-    }
-
-    .faq summary {
-      font-weight: 600;
-      cursor: pointer;
-      list-style: none; /* Remove a seta padrão */
-    }
-    
-    .faq summary::-webkit-details-marker {
-      display: none; /* Chrome/Safari */
-    }
-    
-    .faq summary:after {
-      content: '+';
-      float: right;
-      font-size: 20px;
-      color: var(--primary-color);
-    }
-    
-    .faq details[open] summary:after {
-      content: '−';
-    }
-
-    .faq div {
-      color: var(--muted-color);
-      margin-top: 12px;
-      padding-top: 12px;
-      border-top: 1px solid var(--border-color);
-    }
-
-    /* 10. Rodapé (Footer) */
-    footer {
-      margin-top: 64px;
-      padding-top: 32px;
-      border-top: 1px solid var(--border-color);
-      color: var(--muted-color);
-      font-size: 13px;
+      min-height: 100vh;
       text-align: center;
+      padding: 20px;
     }
-
-    /* 11. Media Queries para Responsividade */
-    @media (max-width: 900px) {
-      .hero {
-        grid-template-columns: 1fr;
-      }
-      .pricing-card {
-        margin-top: 32px;
-        position: static;
-      }
-      .features {
-        grid-template-columns: repeat(2, 1fr);
-      }
+    h1 {
+      font-size: 1.8rem;
+      margin: 15px 0 10px;
     }
-
+    .profile-pic {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      border: 3px solid #fff;
+      object-fit: cover;
+      margin-bottom: 10px;
+      box-shadow: 0px 4px 12px rgba(0,0,0,0.3);
+    }
+    .username {
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+    .progress-container {
+      width: 100%;
+      max-width: 500px;
+      height: 30px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 15px;
+      overflow: hidden;
+      margin: 20px 0 10px;
+    }
+    .progress-bar {
+      height: 100%;
+      width: 0;
+      background: #fff;
+      border-radius: 15px 0 0 15px;
+      transition: width 1s linear;
+    }
+    p {
+      margin: 5px 0;
+      font-size: 1rem;
+    }
+    .time-remaining {
+      font-size: 0.95rem;
+      opacity: 0.9;
+    }
     @media (max-width: 600px) {
-      .headline {
-        font-size: 36px;
-      }
-      .features {
-        grid-template-columns: 1fr;
-      }
-      header {
-          flex-direction: column;
-          gap: 16px;
-      }
+      h1 { font-size: 1.4rem; }
+      p { font-size: 0.9rem; }
+      .progress-container { height: 25px; }
+      .profile-pic { width: 100px; height: 100px; }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <header>
-      <a href="#" class="brand" style="text-decoration: none; color: inherit;">
-        <div class="logo">SP</div>
-        <div class="brand-text">
-          <div>ScrapePro</div>
-          <div>Análise de dados para Aviator</div>
-        </div>
-      </a>
-      <nav>
-        <a href="#features">Recursos</a>
-        <a href="#pricing">Preços</a>
-        <a href="#faq">FAQ</a>
-      </nav>
-    </header>
+  <img src="ft.jpg" alt="Foto de Perfil" class="profile-pic">
+  <div class="username">@sulianevieirasant</div>
+  <h1>Sua conta está sendo recuperada</h1>
 
-    <main>
-      <section class="hero">
-        <div>
-          <h1 class="headline">Monitore e analise dados do Aviator de forma automática</h1>
-          <p class="sub">Com o ScrapePro, você coleta e estrutura informações do Aviator em tempo real. Ideal para identificar padrões, criar estratégias e automatizar suas análises.</p>
-
-          <ul class="benefits-list">
-            <li><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg> Configuração em minutos, sem precisar programar</li>
-            <li><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg> Entrega em CSV, Excel ou Google Sheets</li>
-            <li><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg> Monitoramento agendado, 24 horas por dia</li>
-          </ul>
-
-          <div class="features" id="features">
-            <div class="feature">
-              <strong>Coleta Contínua</strong>
-              <p>Nosso sistema captura os dados de forma robusta, garantindo que você não perca nenhuma informação.</p>
-            </div>
-            <div class="feature">
-              <strong>Agendamento</strong>
-              <p>Configure coletas periódicas para monitorar os dados automaticamente, mesmo quando não estiver online.</p>
-            </div>
-            <div class="feature">
-              <strong>Exportação Flexível</strong>
-              <p>Receba os dados em planilhas (CSV, XLSX) ou integre com Google Sheets para análise imediata.</p>
-            </div>
-          </div>
-
-          <div class="testimonial">
-            <blockquote>"Passei a gastar meu tempo analisando os padrões em vez de ficar coletando tudo na mão. Fez toda a diferença."</blockquote>
-            <cite>— Lucas M., Analista de Dados</cite>
-          </div>
-        </div>
-
-        <aside class="pricing-card" id="pricing">
-          <div class="pricing-header">
-            <div>
-              <div style="font-weight: 600; font-size: 18px;">Plano Especial Aviator</div>
-              <div style="color:var(--muted-color); font-size: 13px;">Pagamento único</div>
-            </div>
-            <div class="badge">Mais popular</div>
-          </div>
-          
-          <div class="price">R$899</div>
-          
-          <ul class="pricing-features">
-            <li><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> 1.000 requisições/mês</li>
-            <li><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Agendador e parser inteligente</li>
-            <li><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Exportação para Google Sheets</li>
-            <li><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> 30 dias de suporte premium</li>
-          </ul>
-        </aside>
-      </section>
-
-      <section class="faq-section" id="faq">
-        <h3>Perguntas Frequentes</h3>
-        <div class="faq">
-          <details>
-            <summary>O que exatamente o ScrapePro faz?</summary>
-            <div>Ele automatiza a coleta de dados de páginas web públicas, como o histórico do Aviator, transforma essas informações em um formato de planilha e as entrega para você analisar.</div>
-          </details>
-          <details>
-            <summary>A coleta de dados é garantida?</summary>
-            <div>Nossa plataforma é robusta, mas a coleta depende da disponibilidade e estrutura do site de origem. Respeitamos as políticas de uso e não garantimos o funcionamento se o site-alvo implementar bloqueios.</div>
-          </details>
-          <details>
-            <summary>Como funciona o suporte?</summary>
-            <div>O plano inclui 30 dias de suporte prioritário via e-mail para ajudar com a configuração e qualquer dúvida. Planos de suporte estendido estão disponíveis para empresas.</div>
-          </details>
-        </div>
-      </section>
-    </main>
-
-    <footer>
-      <div>© 2025 ScrapePro — Construído com ética e automação.</div>
-      <div style="margin-top: 8px; font-size: 12px;">Ao acessar, você concorda com os termos e políticas de uso. Não nos responsabilizamos por uso que viole leis locais ou termos de serviço de terceiros.</div>
-    </footer>
+  <div class="progress-container">
+    <div class="progress-bar" id="progress-bar"></div>
   </div>
+  <p id="status">Processo de recuperação em andamento...</p>
+  <p class="time-remaining" id="time-remaining"></p>
+
+  <script>
+    const progressBar = document.getElementById('progress-bar');
+    const statusText = document.getElementById('status');
+    const timeRemainingText = document.getElementById('time-remaining');
+    const totalDuration = 5 * 24 * 60 * 60 * 1000; // 5 dias em ms
+
+    let startTime = localStorage.getItem('recoveryStartTime');
+    if (!startTime) {
+      startTime = Date.now();
+      localStorage.setItem('recoveryStartTime', startTime);
+    }
+
+    function formatTime(ms) {
+      const totalSeconds = Math.floor(ms / 1000);
+      const days = Math.floor(totalSeconds / (24 * 3600));
+      const hours = Math.floor((totalSeconds % (24 * 3600)) / 3600);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+      const seconds = totalSeconds % 60;
+      return `${days}d ${hours}h ${minutes}m ${seconds}s`;
+    }
+
+    function updateProgress() {
+      const elapsed = Date.now() - startTime;
+      const percent = Math.min((elapsed / totalDuration) * 100, 100);
+      progressBar.style.width = percent + '%';
+
+      if (percent < 100) {
+        const remaining = totalDuration - elapsed;
+        statusText.textContent = `Recuperação em andamento: ${percent.toFixed(2)}%`;
+        timeRemainingText.textContent = `Tempo restante: ${formatTime(remaining)}`;
+        console.log(`Progresso: ${percent.toFixed(2)}% | Tempo restante: ${formatTime(remaining)}`);
+      } else {
+        statusText.textContent = 'Conta recuperada com sucesso!';
+        timeRemainingText.textContent = '';
+        console.log('Conta recuperada com sucesso!');
+      }
+    }
+
+    updateProgress();
+    setInterval(updateProgress, 1000);
+  </script>
 </body>
 </html>
