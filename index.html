@@ -3,86 +3,264 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Processador — Demo</title>
+<title>Processador — Prazo 30 dias úteis (com modal)</title>
 <style>
   :root{
     --bg:#0f1724; --card:#0b1220; --accent:#10b981; --muted:#94a3b8; --warning:#ffb703;
   }
   *{box-sizing:border-box;font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif}
   body{margin:0;min-height:100vh;background:linear-gradient(180deg,#071024,#081426);color:#e6eef8;display:flex;align-items:center;justify-content:center;padding:20px}
-  .wrap{width:100%;max-width:420px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.04);padding:18px;border-radius:12px;box-shadow:0 10px 30px rgba(2,6,23,.6)}
+  .wrap{width:100%;max-width:520px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.04);padding:18px;border-radius:12px;box-shadow:0 10px 30px rgba(2,6,23,.6)}
   h1{font-size:18px;margin:0 0 8px}
   .numberBox{display:flex;align-items:center;justify-content:space-between;padding:12px;border-radius:10px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.03);font-weight:700}
   .label{font-size:13px;color:var(--muted);margin-top:10px}
   .progressWrap{margin-top:14px}
-  .bar{width:100%;height:16px;background:rgba(255,255,255,0.04);border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,0.02)}
-  .fill{height:100%;width:0%;background:linear-gradient(90deg, rgba(16,185,129,0.95), rgba(6,165,145,0.95));transition:width .2s ease}
-  .status{margin-top:8px;font-size:13px;color:var(--muted);min-height:18px}
+  .bar{width:100%;height:18px;background:rgba(255,255,255,0.04);border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,0.02)}
+  .fill{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),#059669);transition:width .6s linear}
+  .status{margin-top:8px;font-size:13px;color:var(--muted);min-height:20px}
   .notification{margin-top:8px;font-size:14px;color:#101010;background:var(--warning);padding:10px;border-radius:8px;border:1px solid rgba(0,0,0,0.08)}
   .controls{display:flex;gap:8px;margin-top:12px}
-  button.primary{flex:1;padding:12px;border-radius:10px;border:0;background:linear-gradient(90deg,var(--accent),#059669);color:#05221a;font-weight:700;cursor:not-allowed;opacity:0.75}
+  button.primary{flex:1;padding:12px;border-radius:10px;border:0;background:linear-gradient(90deg,var(--accent),#059669);color:#05221a;font-weight:700;cursor:pointer;opacity:0.5}
+  button.primary.enabled{opacity:1;cursor:pointer}
   button.secondary{padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:var(--muted);cursor:pointer}
   .hint{margin-top:10px;font-size:12px;color:var(--muted)}
   footer{margin-top:12px;text-align:center;font-size:12px;color:var(--muted)}
+  .meta{font-size:13px;color:var(--muted)}
+  .smallBtn{font-size:12px;padding:6px 8px;border-radius:8px}
+  /* Modal */
+  .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.6);display:none;align-items:center;justify-content:center;z-index:999}
+  .modal{background:var(--card);padding:18px;border-radius:12px;max-width:420px;width:92%;box-shadow:0 10px 30px rgba(0,0,0,0.6);color:inherit}
+  .modal h2{margin:0 0 8px;font-size:17px}
+  .modal .msg{font-size:14px;color:var(--muted);margin-bottom:12px}
+  .spinner{width:44px;height:44px;border-radius:50%;border:4px solid rgba(255,255,255,0.06);border-top-color:var(--accent);animation:spin 1s linear infinite;margin-right:12px}
+  .modal-row{display:flex;align-items:center;gap:12px}
+  .modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:14px}
+  button.ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:8px 10px;border-radius:8px;color:var(--muted);cursor:pointer}
+  @keyframes spin{to{transform:rotate(360deg)}}
 </style>
 </head>
 <body>
-  <div class="wrap" role="application" aria-label="Processador demo">
+  <div class="wrap" role="application" aria-label="Processador prazo 30 dias com modal">
     <h1>Processador</h1>
 
     <div class="label">Número</div>
     <div class="numberBox" id="numberBox">
-      <div>55 99139-3258</div>
-      <div style="font-size:12px;color:var(--muted)">ID: 55991393258</div>
+      <div>+55 59 99139-3258</div>
+      <div class="meta">ID: <strong>55991393258</strong></div>
     </div>
 
     <div class="progressWrap" aria-hidden="false">
       <div class="bar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-        <div class="fill" id="fill"></div>
+        <div class="fill" id="fill" role="progressbar" aria-label="Progresso"></div>
       </div>
-      <div class="status" id="status">Aguardando...</div>
+      <div class="status" id="status">Aguardando confirmação de pagamento...</div>
 
       <div class="notification" id="paymentNotice">
-        Realize o pagamento para continuar.
+        Aguardando pagamento para continuar.
       </div>
     </div>
 
     <div class="controls">
-      <!-- Botão inativo (visual apenas) -->
-      <button class="primary" id="cloneBtn" title="Botão inativo" aria-disabled="true" disabled>Clonar</button>
-      <button class="secondary" id="resetBtn">Resetar</button>
+      <!-- Botão principal -->
+      <button class="primary" id="actionBtn" aria-disabled="true" disabled>Executar Processo</button>
+      <button class="secondary smallBtn" id="confirmPayment">Confirmar Pagamento</button>
+      <button class="secondary smallBtn" id="resetBtn">Resetar</button>
     </div>
 
-    <div class="hint">Botão inativo — não realiza ação.</div>
-    <footer>v1.0</footer>
+    <div class="hint">Prazo estimado: <strong>30 dias úteis</strong> a partir da confirmação de pagamento.</div>
+    <footer>v1.0 — interface de demonstração</footer>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal-backdrop" id="modalBackdrop" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal" role="document" aria-labelledby="modalTitle">
+      <h2 id="modalTitle">Processo em andamento</h2>
+      <div class="modal-row">
+        <div class="spinner" aria-hidden="true"></div>
+        <div>
+          <div class="msg" id="modalMsg">O processo está em andamento. Verifique o console para detalhes.</div>
+          <div class="meta" id="modalMeta"></div>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="ghost" id="modalClose">Fechar</button>
+      </div>
+    </div>
   </div>
 
 <script>
-  // Este arquivo é apenas interface visual.
-  const fill = document.getElementById('fill');
-  const status = document.getElementById('status');
-  const cloneBtn = document.getElementById('cloneBtn');
-  const resetBtn = document.getElementById('resetBtn');
-  const paymentNotice = document.getElementById('paymentNotice');
+/* Segurança: textos neutros, sem incentivar atividades ilegais.
+   Modal e logs no console informam "processo em andamento" (genérico).
+*/
 
-  // Mantém o botão sem comportamento: previne qualquer ação.
-  cloneBtn.addEventListener('click', (e) => {
-    // botão desabilitado; mas por segurança, interceptamos clique caso seja habilitado via devtools
-    e.preventDefault();
-    alert('Botão inativo — nenhuma ação será executada.');
-  });
+const LS_KEY = 'processador_30dias_state_v1';
+const fillEl = document.getElementById('fill');
+const statusEl = document.getElementById('status');
+const paymentNotice = document.getElementById('paymentNotice');
+const actionBtn = document.getElementById('actionBtn');
+const confirmBtn = document.getElementById('confirmPayment');
+const resetBtn = document.getElementById('resetBtn');
 
-  // Reset visual
-  resetBtn.addEventListener('click', () => {
-    fill.style.width = '0%';
-    status.textContent = 'Aguardando...';
-    paymentNotice.textContent = 'Realize o pagamento para continuar.';
-  });
+const modalBackdrop = document.getElementById('modalBackdrop');
+const modalMsg = document.getElementById('modalMsg');
+const modalMeta = document.getElementById('modalMeta');
+const modalClose = document.getElementById('modalClose');
 
-  // Pequeno demo visual: ao carregar, mostra que está aguardando pagamento
-  document.addEventListener('DOMContentLoaded', () => {
-    status.textContent = 'Aguardando pagamento...';
-  });
+let state = loadState(); // { start: ISOstring | null, target: ISOstring | null, completed: bool }
+
+function loadState() {
+  try { return JSON.parse(localStorage.getItem(LS_KEY)) || {start:null, target:null, completed:false}; }
+  catch(e){ return {start:null, target:null, completed:false}; }
+}
+function saveState(){ localStorage.setItem(LS_KEY, JSON.stringify(state)); }
+
+// addBusinessDays same as before
+function addBusinessDays(date, days) {
+  const d = new Date(date);
+  let added = 0;
+  while (added < days) {
+    d.setDate(d.getDate() + 1);
+    const day = d.getDay();
+    if (day !== 0 && day !== 6) added++;
+  }
+  return d;
+}
+
+function computeProgressPercent(startISO, targetISO){
+  const now = new Date().getTime();
+  const start = new Date(startISO).getTime();
+  const target = new Date(targetISO).getTime();
+  if (now <= start) return 0;
+  if (now >= target) return 100;
+  const pct = Math.round( ( (now - start) / (target - start) ) * 100 );
+  return Math.min(100, Math.max(0, pct));
+}
+
+function logConsole(msg, extra){
+  const ts = new Date().toISOString();
+  console.log(`[Processador ${ts}] ${msg}`, extra || '');
+}
+
+// UI refresh
+function refreshUI(){
+  if(!state.start){
+    fillEl.style.width = '0%';
+    statusEl.textContent = 'Aguardando confirmação de pagamento...';
+    paymentNotice.textContent = 'Aguardando pagamento para continuar.';
+    actionBtn.disabled = true;
+    actionBtn.classList.remove('enabled');
+    actionBtn.setAttribute('aria-disabled','true');
+    logConsole('Estado: aguardando pagamento');
+  } else {
+    const pct = computeProgressPercent(state.start, state.target);
+    fillEl.style.width = pct + '%';
+    document.querySelector('.bar').setAttribute('aria-valuenow', pct);
+    if(pct >= 100){
+      statusEl.textContent = 'Concluído.';
+      paymentNotice.textContent = 'Pagamento confirmado — processo concluído.';
+      actionBtn.disabled = false;
+      actionBtn.classList.add('enabled');
+      actionBtn.setAttribute('aria-disabled','false');
+      state.completed = true;
+      saveState();
+      logConsole('Atualização', {percent:pct, status:'Concluído'});
+    } else {
+      const startDate = new Date(state.start);
+      const targetDate = new Date(state.target);
+      // approximate remaining business days to target
+      const remainingMs = Math.max(0, targetDate - Date.now());
+      const remainingDays = Math.ceil(remainingMs / (1000*60*60*24));
+      statusEl.textContent = `Pagamento confirmado — ${pct}% (até ${targetDate.toLocaleDateString()} — ~${remainingDays} dias úteis)`;
+      paymentNotice.textContent = `Pagamento confirmado — prazo: 30 dias úteis a partir de ${startDate.toLocaleDateString()}.`;
+      actionBtn.disabled = false;
+      actionBtn.classList.add('enabled');
+      actionBtn.setAttribute('aria-disabled','false');
+      state.completed = false;
+      saveState();
+      logConsole('Atualização', {percent:pct, status:'Em andamento'});
+    }
+  }
+}
+
+// Confirm payment
+confirmBtn.addEventListener('click', ()=>{
+  if(state.start && !confirm('Já existe uma confirmação anterior. Reiniciar a contagem a partir de agora?')) return;
+  const now = new Date();
+  const target = addBusinessDays(now, 30);
+  state.start = now.toISOString();
+  state.target = target.toISOString();
+  state.completed = false;
+  saveState();
+  logConsole('Pagamento confirmado', {start: state.start, target: state.target});
+  refreshUI();
+});
+
+// Action button (abre modal e registra console) - visual only
+actionBtn.addEventListener('click', ()=>{
+  if(actionBtn.disabled){
+    alert('Botão não disponível no momento.');
+    return;
+  }
+  // Show modal with neutral message
+  openModal();
+  const pct = state.start ? computeProgressPercent(state.start, state.target) : 0;
+  logConsole('Ação visual acionada — processo em andamento', {percent:pct, start: state.start, target: state.target});
+});
+
+// Reset
+resetBtn.addEventListener('click', ()=>{
+  if(!confirm('Resetar estado local e reiniciar?')) return;
+  state = {start:null, target:null, completed:false};
+  saveState();
+  logConsole('Estado resetado pelo usuário');
+  refreshUI();
+});
+
+// Modal functions
+function openModal(){
+  modalBackdrop.style.display = 'flex';
+  modalBackdrop.setAttribute('aria-hidden','false');
+  // fill modal content dynamically
+  if(!state.start){
+    modalMsg.textContent = 'Nenhum pagamento confirmado. Aguarde a confirmação para iniciar o processo.';
+    modalMeta.textContent = '';
+    logConsole('Modal aberto: sem pagamento confirmado');
+  } else {
+    const pct = computeProgressPercent(state.start, state.target);
+    const startDate = new Date(state.start).toLocaleString();
+    const targetDate = new Date(state.target).toLocaleString();
+    modalMsg.textContent = `Processo em andamento — ${pct}% concluído.`;
+    modalMeta.textContent = `Início: ${startDate} • Prazo final: ${targetDate}`;
+    logConsole('Modal aberto: processo em andamento', {percent:pct, start: state.start, target: state.target});
+  }
+}
+
+// Close modal
+modalClose.addEventListener('click', closeModal);
+modalBackdrop.addEventListener('click', (e)=>{
+  if(e.target === modalBackdrop) closeModal();
+});
+function closeModal(){
+  modalBackdrop.style.display = 'none';
+  modalBackdrop.setAttribute('aria-hidden','true');
+  logConsole('Modal fechado pelo usuário');
+}
+
+// Periodic updater
+function periodicUpdate(){
+  refreshUI();
+  if(state.start){
+    const pct = computeProgressPercent(state.start, state.target);
+    logConsole('Snapshot periódico', {percent:pct, start: state.start, target: state.target});
+  }
+}
+
+// Initial
+periodicUpdate();
+setInterval(periodicUpdate, 60000); // atualiza a cada minuto
+
+// Nota para desenvolvedores/testes:
+// Se quiser testar mais rápido, altere o intervalo de setInterval e a lógica addBusinessDays temporariamente.
 </script>
 </body>
 </html>
