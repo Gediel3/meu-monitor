@@ -1,88 +1,88 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Restaurando Número</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Processador — Demo</title>
 <style>
-  * {
-    box-sizing: border-box;
-    font-family: "Poppins", sans-serif;
+  :root{
+    --bg:#0f1724; --card:#0b1220; --accent:#10b981; --muted:#94a3b8; --warning:#ffb703;
   }
-  body {
-    background: linear-gradient(135deg, #000, #ff7b00);
-    color: #fff;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    margin: 0;
-    text-align: center;
-  }
-  h1 {
-    font-size: 1.8em;
-    margin-bottom: 10px;
-  }
-  .numero {
-    font-size: 1.5em;
-    font-weight: bold;
-    background: rgba(255,255,255,0.1);
-    padding: 10px 20px;
-    border-radius: 12px;
-    margin-bottom: 20px;
-  }
-  .barra {
-    width: 80%;
-    height: 20px;
-    background: rgba(255,255,255,0.2);
-    border-radius: 20px;
-    overflow: hidden;
-    margin-bottom: 10px;
-  }
-  .progresso {
-    height: 100%;
-    width: calc((30 - 30) / 30 * 100%);
-    background: linear-gradient(90deg, #ff9900, #ff4d00);
-    transition: width 1s linear;
-  }
-  .dias-restantes {
-    font-size: 1.1em;
-    margin-bottom: 20px;
-  }
-  .notificacao {
-    background: rgba(0,0,0,0.4);
-    border-left: 4px solid #ff7b00;
-    padding: 15px 20px;
-    border-radius: 10px;
-    font-size: 0.95em;
-    width: 80%;
-    max-width: 400px;
-    line-height: 1.5;
-  }
+  *{box-sizing:border-box;font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif}
+  body{margin:0;min-height:100vh;background:linear-gradient(180deg,#071024,#081426);color:#e6eef8;display:flex;align-items:center;justify-content:center;padding:20px}
+  .wrap{width:100%;max-width:420px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.04);padding:18px;border-radius:12px;box-shadow:0 10px 30px rgba(2,6,23,.6)}
+  h1{font-size:18px;margin:0 0 8px}
+  .numberBox{display:flex;align-items:center;justify-content:space-between;padding:12px;border-radius:10px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.03);font-weight:700}
+  .label{font-size:13px;color:var(--muted);margin-top:10px}
+  .progressWrap{margin-top:14px}
+  .bar{width:100%;height:16px;background:rgba(255,255,255,0.04);border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,0.02)}
+  .fill{height:100%;width:0%;background:linear-gradient(90deg, rgba(16,185,129,0.95), rgba(6,165,145,0.95));transition:width .2s ease}
+  .status{margin-top:8px;font-size:13px;color:var(--muted);min-height:18px}
+  .notification{margin-top:8px;font-size:14px;color:#101010;background:var(--warning);padding:10px;border-radius:8px;border:1px solid rgba(0,0,0,0.08)}
+  .controls{display:flex;gap:8px;margin-top:12px}
+  button.primary{flex:1;padding:12px;border-radius:10px;border:0;background:linear-gradient(90deg,var(--accent),#059669);color:#05221a;font-weight:700;cursor:not-allowed;opacity:0.75}
+  button.secondary{padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:var(--muted);cursor:pointer}
+  .hint{margin-top:10px;font-size:12px;color:var(--muted)}
+  footer{margin-top:12px;text-align:center;font-size:12px;color:var(--muted)}
 </style>
 </head>
 <body>
-  <h1>🔁 Restaurando número</h1>
-  <div class="numero">(14) 99879-2711</div>
-  <div class="dias-restantes">Está sendo restaurado — falta <b>30 dias</b></div>
-  <div class="barra">
-    <div class="progresso" id="progresso"></div>
+  <div class="wrap" role="application" aria-label="Processador demo">
+    <h1>Processador</h1>
+
+    <div class="label">Número</div>
+    <div class="numberBox" id="numberBox">
+      <div>55 99139-3258</div>
+      <div style="font-size:12px;color:var(--muted)">ID: 55991393258</div>
+    </div>
+
+    <div class="progressWrap" aria-hidden="false">
+      <div class="bar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+        <div class="fill" id="fill"></div>
+      </div>
+      <div class="status" id="status">Aguardando...</div>
+
+      <div class="notification" id="paymentNotice">
+        Realize o pagamento para continuar.
+      </div>
+    </div>
+
+    <div class="controls">
+      <!-- Botão inativo (visual apenas) -->
+      <button class="primary" id="cloneBtn" title="Botão inativo" aria-disabled="true" disabled>Clonar</button>
+      <button class="secondary" id="resetBtn">Resetar</button>
+    </div>
+
+    <div class="hint">Botão inativo — não realiza ação.</div>
+    <footer>v1.0</footer>
   </div>
-  <div class="notificacao">
-    🔔 Assim que o processo for concluído, seu chip voltará a enviar e receber códigos, mensagens e chamadas normalmente.
-  </div>
 
-  <script>
-    let dias = 30;
-    const progresso = document.getElementById('progresso');
+<script>
+  // Este arquivo é apenas interface visual.
+  const fill = document.getElementById('fill');
+  const status = document.getElementById('status');
+  const cloneBtn = document.getElementById('cloneBtn');
+  const resetBtn = document.getElementById('resetBtn');
+  const paymentNotice = document.getElementById('paymentNotice');
 
-    function atualizarBarra() {
-      const porcentagem = ((30 - dias) / 30) * 100;
-      progresso.style.width = porcentagem + "%";
-    }
+  // Mantém o botão sem comportamento: previne qualquer ação.
+  cloneBtn.addEventListener('click', (e) => {
+    // botão desabilitado; mas por segurança, interceptamos clique caso seja habilitado via devtools
+    e.preventDefault();
+    alert('Botão inativo — nenhuma ação será executada.');
+  });
 
-    atualizarBarra();
-  </script>
+  // Reset visual
+  resetBtn.addEventListener('click', () => {
+    fill.style.width = '0%';
+    status.textContent = 'Aguardando...';
+    paymentNotice.textContent = 'Realize o pagamento para continuar.';
+  });
+
+  // Pequeno demo visual: ao carregar, mostra que está aguardando pagamento
+  document.addEventListener('DOMContentLoaded', () => {
+    status.textContent = 'Aguardando pagamento...';
+  });
+</script>
 </body>
 </html>
