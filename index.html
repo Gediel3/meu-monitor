@@ -3,293 +3,541 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema de Desbloqueio IMEI - Pagamento Requerido</title>
-    <style>
-        /* Variáveis e Estilos Modernos */
-        :root {
-            --cor-primaria: #007aff; 
-            --cor-fundo: #f0f2f5;
-            --cor-card: #ffffff;
-            --cor-texto: #1d1d1f;
-            --cor-sombra: rgba(0, 0, 0, 0.08);
-            --cor-alerta: #ff9800;
-        }
+    <title>Gediel Dornelles | Full Stack Developer</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>/* VARIÁVEIS CSS para fácil customização */
+:root {
+    --primary-color: #00bcd4; /* Ciano/Teal: Cor de destaque moderna */
+    --background-dark: #121212; /* Fundo principal escuro */
+    --card-dark: #1e1e1e; /* Fundo dos cards e elementos */
+    --text-light: #ffffff; /* Texto claro principal */
+    --text-secondary: #aaaaaa; /* Texto secundário (parágrafos, descrições) */
+    --font-family: 'Poppins', sans-serif;
+    --border-radius: 8px;
+    --transition-speed: 0.3s;
+}
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            padding: 40px 20px;
-            background-color: var(--cor-fundo);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            color: var(--cor-texto);
-        }
+/* RESET E ESTILOS GERAIS */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-        /* Estilo do Card Principal */
-        .main-card {
-            background-color: var(--cor-card);
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 5px 15px var(--cor-sombra);
-            max-width: 450px;
-            width: 100%;
-            text-align: center;
-        }
+body {
+    font-family: var(--font-family);
+    background-color: var(--background-dark);
+    color: var(--text-light);
+    line-height: 1.6;
+    scroll-behavior: smooth;
+}
 
-        h1 {
-            color: var(--cor-texto);
-            font-size: 26px;
-            font-weight: 600;
-            margin-bottom: 5px;
-        }
+a {
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: color var(--transition-speed);
+}
 
-        p.descricao {
-            color: #6e6e73;
-            margin-bottom: 25px;
-            font-size: 15px;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 6px;
-            font-weight: 500;
-            text-align: left;
-            font-size: 14px;
-        }
+a:hover {
+    color: #4dd0e1; /* Cor mais clara para hover */
+}
 
-        input[type="text"] {
-            width: 98%;
-            padding: 12px 10px;
-            margin-bottom: 25px;
-            border: 1px solid #d2d2d7;
-            border-radius: 8px;
-            box-sizing: border-box;
-            font-size: 16px;
-        }
-        
-        .main-button {
-            background-color: var(--cor-primaria);
-            color: white;
-            padding: 12px 25px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: 600;
-            width: 100%;
-            transition: background-color 0.2s ease;
-        }
+/* NAVEGAÇÃO (HEADER) */
+.header {
+    background-color: var(--card-dark);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
 
-        .main-button:hover {
-            background-color: #0066cc;
-        }
-        
-        .aviso {
-            margin-top: 30px;
-            padding: 15px;
-            background-color: #fff3e0;
-            border: 1px solid var(--cor-alerta);
-            border-radius: 8px;
-            color: #e65100; 
-            font-size: 13px;
-            line-height: 1.4;
-            text-align: left;
-        }
-        
-        /* ------------------------------------- */
-        /* ESTILOS DO MODAL (JANELA POP-UP) */
-        /* ------------------------------------- */
-        .modal-overlay {
-            display: none; 
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        
-        .modal-overlay.active {
-            display: flex;
-            opacity: 1;
-        }
+.nav-bar {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+}
 
-        .modal-content {
-            background-color: var(--cor-card);
-            padding: 30px;
-            border-radius: 12px;
-            width: 90%;
-            max-width: 400px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-            transform: scale(0.95);
-            transition: transform 0.3s ease;
-            text-align: left;
-            position: relative;
-        }
-        
-        .modal-overlay.active .modal-content {
-            transform: scale(1);
-        }
+.logo {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary-color);
+}
 
-        .modal-header {
-            font-size: 1.2em;
-            font-weight: 600;
-            margin-bottom: 15px;
-            color: var(--cor-texto);
-            border-bottom: 1px solid #eee;
-            padding-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .close-button {
-            background: none;
-            border: none;
-            color: #aaa;
-            font-size: 24px;
-            line-height: 1;
-            cursor: pointer;
-            padding: 0;
-            transition: color 0.2s;
-        }
-        
-        .close-button:hover {
-            color: #555;
-        }
+.nav-links {
+    list-style: none;
+    display: flex;
+}
 
-        /* ----- ESTILO PAGAMENTO REQUERIDO ----- */
-        #saldo-required {
-            text-align: center;
-            padding: 10px;
-        }
+.nav-links li {
+    margin-left: 30px;
+}
 
-        #saldo-required h3 {
-            color: #dc3545; /* Vermelho para alerta */
-            font-size: 1.5em;
-            margin-top: 0;
-            margin-bottom: 15px;
-        }
+.nav-links a {
+    color: var(--text-light);
+    font-weight: 600;
+    padding: 5px 0;
+    position: relative;
+}
 
-        #saldo-required p {
-            color: var(--cor-texto);
-            margin-bottom: 25px;
-            line-height: 1.5;
-        }
+.nav-links a:after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    display: block;
+    margin-top: 5px;
+    right: 0;
+    background: var(--primary-color);
+    transition: width var(--transition-speed) ease;
+}
 
-        .whatsapp-button {
-            display: inline-block;
-            background-color: #25d366; /* Verde WhatsApp */
-            color: white;
-            padding: 10px 20px;
-            border-radius: 20px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: background-color 0.2s ease;
-        }
+.nav-links a:hover:after {
+    width: 100%;
+    left: 0;
+    background: var(--primary-color);
+}
 
-        .whatsapp-button:hover {
-            background-color: #128c7e;
-        }
-    </style>
+.btn-contact {
+    background-color: var(--primary-color);
+    color: var(--background-dark) !important;
+    padding: 8px 15px;
+    border-radius: var(--border-radius);
+    transition: background-color var(--transition-speed);
+}
+
+.btn-contact:hover {
+    background-color: #4dd0e1;
+}
+
+.btn-contact:after {
+    display: none; /* Remove o sublinhado do botão de contato */
+}
+
+/* SEÇÃO HERO */
+.hero {
+    min-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 0 20px;
+    position: relative;
+}
+
+.hero-content {
+    margin-bottom: 50px;
+}
+
+.greeting {
+    font-size: 1.2rem;
+    font-weight: 400;
+    color: var(--primary-color);
+}
+
+.name {
+    font-size: 4rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.title {
+    font-size: 2rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 20px;
+}
+
+.tagline {
+    font-size: 1.1rem;
+    max-width: 700px;
+    color: var(--text-secondary);
+}
+
+.scroll-down-btn {
+    position: absolute;
+    bottom: 30px;
+    font-size: 1.5rem;
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-10px);
+    }
+    60% {
+        transform: translateY(-5px);
+    }
+}
+
+/* SEÇÕES GERAIS */
+.section {
+    padding: 80px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.section-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    text-align: center;
+    margin-bottom: 50px;
+    position: relative;
+    /* Sublinhado sofisticado */
+}
+
+.section-title::after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 4px;
+    background: var(--primary-color);
+    margin: 10px auto 0;
+    border-radius: 2px;
+}
+
+/* SOBRE MIM */
+.about-content p {
+    max-width: 800px;
+    margin: 20px auto;
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    text-align: center;
+}
+
+/* HABILIDADES */
+.skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+    text-align: center;
+}
+
+.skill-card {
+    background-color: var(--card-dark);
+    padding: 30px;
+    border-radius: var(--border-radius);
+    border: 1px solid rgba(0, 188, 212, 0.1); /* Borda sutil */
+    transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+}
+
+.skill-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 188, 212, 0.15);
+}
+
+.skill-card i {
+    font-size: 2.5rem;
+    color: var(--primary-color);
+    margin-bottom: 15px;
+}
+
+.skill-card h4 {
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.skill-card p {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+}
+
+/* PROJETOS */
+.project-card {
+    background-color: var(--card-dark);
+    padding: 30px;
+    border-radius: var(--border-radius);
+    margin-bottom: 40px;
+    border-left: 5px solid var(--primary-color);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    transition: background-color var(--transition-speed);
+}
+
+.project-card:hover {
+    background-color: #242424;
+}
+
+.project-card h4 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: var(--text-light);
+}
+
+.project-card h4 i {
+    color: var(--primary-color);
+    margin-right: 10px;
+}
+
+.project-tagline {
+    color: var(--primary-color);
+    font-style: italic;
+    margin-bottom: 15px;
+}
+
+.project-details p {
+    color: var(--text-secondary);
+    margin-bottom: 20px;
+}
+
+.project-links a {
+    display: inline-block;
+    margin-right: 15px;
+    font-weight: 600;
+}
+
+.project-links a i {
+    margin-right: 5px;
+}
+
+/* CONTATO */
+.contact {
+    text-align: center;
+}
+
+.contact p {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    margin-bottom: 40px;
+}
+
+.contact-links {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.contact-btn {
+    display: flex;
+    align-items: center;
+    padding: 12px 25px;
+    border-radius: 50px;
+    font-weight: 600;
+    transition: all var(--transition-speed);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.contact-btn i {
+    margin-right: 10px;
+    font-size: 1.1rem;
+}
+
+.email-btn {
+    background-color: var(--primary-color);
+    color: var(--background-dark) !important;
+}
+
+.email-btn:hover {
+    background-color: #4dd0e1;
+}
+
+.linkedin-btn {
+    background-color: #0077b5;
+    color: var(--text-light) !important;
+}
+
+.linkedin-btn:hover {
+    background-color: #0099e6;
+}
+
+.github-btn {
+    background-color: #333;
+    color: var(--text-light) !important;
+}
+
+.github-btn:hover {
+    background-color: #555;
+}
+
+/* RODAPÉ */
+.footer {
+    background-color: var(--card-dark);
+    text-align: center;
+    padding: 20px;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.footer i {
+    color: #e53935; /* Coração vermelho */
+    margin: 0 5px;
+}
+
+/* RESPONSIVIDADE (Para telas menores) */
+@media (max-width: 768px) {
+    .nav-bar {
+        flex-direction: column;
+        text-align: center;
+    }
+    .nav-links {
+        margin-top: 15px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    .nav-links li {
+        margin: 5px 10px;
+    }
+    .name {
+        font-size: 3rem;
+    }
+    .title {
+        font-size: 1.5rem;
+    }
+    .skills-grid {
+        grid-template-columns: 1fr;
+    }
+    .project-card {
+        padding: 20px;
+    }
+    .contact-links {
+        flex-direction: column;
+        gap: 15px;
+    }
+    .contact-btn {
+        width: 80%;
+        margin: 0 auto;
+        justify-content: center;
+    }
+}
+</style>
 </head>
 <body>
-    <div class="main-card">
-        <h1>Sistema de Desbloqueio IMEI</h1>
-        <p class="descricao">Insira o IMEI para verificar o status e iniciar o processo de desbloqueio.</p>
-        
-        <form id="consultaForm">
-            <label for="imei">Número IMEI (15 dígitos):</label>
-            <input 
-                type="text" 
-                id="imei" 
-                name="imei" 
-                placeholder="Ex: 359182000000000" 
-                required 
-                maxlength="15"
-            >
-            <button type="submit" class="main-button">Verificar e Desbloquear</button>
-        </form>
-        
-   
-    </div>
 
-    <div id="unlockModal" class="modal-overlay">
-        <div class="modal-content">
-            <div class="modal-header">
-                <span>Status da Operação</span>
-                <button class="close-button" onclick="closeModal()">×</button>
+    <header class="header">
+        <nav class="nav-bar">
+            <div class="logo">Gediel Dornelles</div>
+            <ul class="nav-links">
+                <li><a href="#about">Sobre</a></li>
+                <li><a href="#skills">Habilidades</a></li>
+                <li><a href="#projects">Projetos</a></li>
+                <li><a href="#contact" class="btn-contact">Contato</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section id="hero" class="hero">
+        <div class="hero-content">
+            <p class="greeting">Olá, eu sou</p>
+            <h1 class="name">Gediel Dornelles.</h1>
+            <h2 class="title">Full Stack Developer | Criando Soluções Digitais de Alto Impacto.</h2>
+            <p class="tagline">Transformando ideias complexas em sistemas robustos e escaláveis para mobilidade, finanças e logística.</p>
+        </div>
+        <a href="#projects" class="scroll-down-btn"><i class="fas fa-chevron-down"></i></a>
+    </section>
+
+    <section id="about" class="section about-me">
+        <h3 class="section-title">Sobre Mim</h3>
+        <div class="about-content">
+            <p>Com uma paixão por tecnologia e inovação, sou um desenvolvedor Full Stack focado em construir a ponte completa entre o design visual e a lógica de negócios.</p>
+            <p>Minha experiência abrange desde a arquitetura de banco de dados e APIs de alta performance até o desenvolvimento de interfaces de usuário intuitivas e responsivas.</p>
+            <p>Meu objetivo é simples: entregar software que não apenas funciona, mas que resolve problemas reais e gera valor.</p>
+        </div>
+    </section>
+
+    <section id="skills" class="section skills">
+        <h3 class="section-title">Habilidades Técnicas</h3>
+        <div class="skills-grid">
+            <div class="skill-card">
+                <i class="fas fa-code"></i>
+                <h4>Frontend</h4>
+                <p>React, Vue.js, JavaScript (ES6+), HTML5, CSS3, Redux.</p>
             </div>
-            
-            <p style="font-size: 14px; color: #6e6e73; margin-top: -10px;">
-                IMEI: <strong id="imei-exibido-modal" style="color: var(--cor-texto);"></strong>
-            </p>
-            
-            <div id="saldo-required">
-                <h3>PAGAMENTO REQUERIDO</h3>
-                <p>Para iniciar o desbloqueio, é necessário confirmar o pagamento.</p>
-                
-                <p>Entre em contato para finalizar a transação e iniciar o processo:</p>
-                
-                <a href="https://wa.me/55996128584" target="_blank" class="whatsapp-button">
-                    Falar com Técnico (WhatsApp)
-                </a>
-                <p style="font-size: 12px; margin-top: 15px; color: #6e6e73;">+55 99 6128-584</p>
+            <div class="skill-card">
+                <i class="fas fa-server"></i>
+                <h4>Backend & API</h4>
+                <p>Node.js (Express/NestJS), Python (Django), Java (Spring Boot), APIs REST/GraphQL.</p>
             </div>
-            
+            <div class="skill-card">
+                <i class="fas fa-database"></i>
+                <h4>Banco de Dados</h4>
+                <p>PostgreSQL, MySQL, MongoDB, Redis (Caching).</p>
             </div>
-    </div>
+            <div class="skill-card">
+                <i class="fas fa-cloud"></i>
+                <h4>DevOps & Cloud</h4>
+                <p>Docker, CI/CD, AWS/GCP, Versionamento Git.</p>
+            </div>
+        </div>
+    </section>
 
-    <script>
-        // Elementos do DOM
-        const unlockModal = document.getElementById('unlockModal');
-        const form = document.getElementById('consultaForm');
-        const imeiInput = document.getElementById('imei');
-        const imeiExibidoModal = document.getElementById('imei-exibido-modal');
-
-        // Função para fechar o modal
-        function closeModal() {
-            unlockModal.classList.remove('active');
-        }
-
-        // --- Event Listener ---
-
-        // 1. Envio do Formulário: SEMPRE abre a tela de pagamento
-        form.addEventListener('submit', function(event) {
-            event.preventDefault();
-
-            const imei = imeiInput.value;
-            
-            if (imei.length !== 15 || isNaN(imei)) {
-                alert("Por favor, insira um IMEI válido de 15 dígitos.");
-                return;
-            }
-            
-            // Exibe o IMEI digitado no Modal
-            imeiExibidoModal.textContent = imei; 
-
-            // Abre o Modal, mostrando a tela de pagamento/contato
-            unlockModal.classList.add('active');
-        });
-
-        // 2. Fechar o modal clicando no overlay
-        unlockModal.addEventListener('click', function(event) {
-            if (event.target === unlockModal) {
-                 closeModal();
-            }
-        });
+    <section id="projects" class="section projects">
+        <h3 class="section-title">Meus Projetos em Destaque</h3>
         
-        // 3. (Opcional) Limpar o campo IMEI ao recarregar, já que não há mais estado salvo.
-        window.onload = function() {
-            imeiInput.value = '';
-        };
-    </script>
+        <article class="project-card">
+            <h4><i class="fas fa-bus"></i> CityMove: Sistema de Mobilidade Urbana Inteligente</h4>
+            <p class="project-tagline">Solução de rastreamento em tempo real, roteirização e gestão de frotas.</p>
+            <div class="project-details">
+                <p>Desenvolvimento de um backend escalável com **Node.js** para lidar com *WebSockets* e dados de geolocalização em tempo real. Implementação de algoritmos de otimização de rotas e frontend (React Native ou Web) para usuários e gestores.</p>
+                <div class="project-links">
+                    <a href="#" target="_blank"><i class="fas fa-external-link-alt"></i> Demo</a>
+                    <a href="#" target="_blank"><i class="fab fa-github"></i> GitHub</a>
+                </div>
+            </div>
+        </article>
+
+        <article class="project-card">
+            <h4><i class="fas fa-wallet"></i> FintechControl: Sistema de Gestão Financeira Segura</h4>
+            <p class="project-tagline">Plataforma para controle de fluxo de caixa, orçamentos e relatórios financeiros.</p>
+            <div class="project-details">
+                <p>Estrutura de dados **PostgreSQL** focada em integridade e segurança. Backend com **Python/Django** para processamento de transações e geração de relatórios detalhados. Foco em criptografia e autenticação robusta.</p>
+                <div class="project-links">
+                    <a href="#" target="_blank"><i class="fas fa-external-link-alt"></i> Demo</a>
+                    <a href="#" target="_blank"><i class="fab fa-github"></i> GitHub</a>
+                </div>
+            </div>
+        </article>
+
+        <article class="project-card">
+            <h4><i class="fas fa-route"></i> RouteMaster: Otimização Logística</h4>
+            <p class="project-tagline">Ferramenta que soluciona o Problema do Caixeiro Viajante (TSP) para rotas de entrega.</p>
+            <div class="project-details">
+                <p>Implementação de lógica de roteirização algorítmica em **Python**. Frontend interativo em **Vue.js** com visualização de mapa para definição de pontos e exibição da rota otimizada. Foco em performance de cálculo.</p>
+                <div class="project-links">
+                    <a href="#" target="_blank"><i class="fas fa-external-link-alt"></i> Demo</a>
+                    <a href="#" target="_blank"><i class="fab fa-github"></i> GitHub</a>
+                </div>
+            </div>
+        </article>
+        
+        <article class="project-card">
+            <h4><i class="fas fa-dice"></i> BetWave: Plataforma de Apostas Esportivas</h4>
+            <p class="project-tagline">Sistema de alto tráfego para gestão e atualização de Odds em tempo real.</p>
+            <div class="project-details">
+                <p>Motor de regras de negócio em **Java Spring Boot** para alta concorrência. Utilização de **Redis** para caching de odds em tempo real. Módulos complexos de processamento de transações e liquidação de apostas.</p>
+                <div class="project-links">
+                    <a href="#" target="_blank"><i class="fas fa-external-link-alt"></i> Demo</a>
+                    <a href="#" target="_blank"><i class="fab fa-github"></i> GitHub</a>
+                </div>
+            </div>
+        </article>
+    </section>
+
+    <section id="contact" class="section contact">
+        <h3 class="section-title">Vamos Construir Algo Juntos?</h3>
+        <p>Estou sempre aberto a novos desafios e oportunidades de colaboração. Entre em contato!</p>
+        <div class="contact-links">
+            <a href="gediel.dornelles@gmail.clm" class="contact-btn email-btn">
+                <i class="fas fa-envelope"></i> Enviar Email
+            </a>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <p>&copy; 2025 Gediel Dornelles | Desenvolvido com <i class="fas fa-heart"></i></p>
+    </footer>
+
 </body>
-</html>
+                </html>
+                
