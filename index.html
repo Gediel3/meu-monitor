@@ -3,21 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Acesso Restrito - 1º Pelotão</title>
+    <title>1º Pelotão | Status App</title>
     <style>
-        /* --- Cores e Tipografia Exército --- */
+        /* --- Cores e Tipografia App Militar --- */
         :root {
-            --cor-fundo: #001f1a;      
-            --cor-principal: #3f4f3f;  
-            --cor-destaque: #f1c40f;   /* Amarelo/Dourado (Patente) */
-            --cor-perigo: #c0392b;     /* Vermelho Escuro (Alerta/Falta) */
+            --cor-fundo: #1c2732;      
+            --cor-card: #283747;       
+            --cor-destaque: #f1c40f;   /* Amarelo/Dourado */
+            --cor-perigo: #e74c3c;     /* Vermelho (Ação/Alerta) */
+            --cor-sucesso: #2ecc71;    /* Verde (Sucesso) */
             --cor-texto: #ecf0f1;      
-            --cor-borda: #1a3e36;
+            --cor-borda: #34495e;
+            --cor-input: #34495e;
         }
 
-        /* --- Estilos Gerais --- */
+        /* --- Estilos Gerais e Mobile Layout --- */
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', sans-serif;
             background-color: var(--cor-fundo);
             display: flex;
             flex-direction: column;
@@ -25,232 +27,257 @@
             align-items: center;
             min-height: 100vh;
             margin: 0;
-            padding: 10px;
+            padding: 15px;
+        }
+        
+        /* Container Principal e Login */
+        .app-container {
+            width: 100%;
+            max-width: 450px;
         }
 
-        /* --- Estilo do Painel de Login --- */
+        /* --- Painel de Login --- */
         #login-panel {
-            background-color: var(--cor-principal);
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
-            width: 90%;
-            max-width: 350px;
+            background-color: var(--cor-card);
+            padding: 40px 20px;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
             text-align: center;
-            border: 2px solid var(--cor-destaque);
+            border-top: 5px solid var(--cor-destaque);
             color: var(--cor-texto);
         }
         
         #login-panel h2 {
             color: var(--cor-destaque);
-            margin-bottom: 20px;
-            text-transform: uppercase;
+            margin-bottom: 5px;
+            font-size: 1.8em;
+        }
+        
+        #login-panel p {
+            color: #b3c0c7;
+            margin-bottom: 25px;
         }
 
         #login-panel input[type="password"] {
-            width: calc(100% - 20px);
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid var(--cor-borda);
-            border-radius: 4px;
-            background-color: #2b3b2b;
+            width: calc(100% - 22px);
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 2px solid var(--cor-borda);
+            border-radius: 8px;
+            background-color: var(--cor-input);
             color: var(--cor-texto);
-            font-size: 1.1em;
+            font-size: 1.2em;
             text-align: center;
         }
 
         #login-panel button {
             background-color: var(--cor-perigo);
-            color: var(--cor-texto);
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 1em;
+            width: 100%;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 1.1em;
             font-weight: bold;
-            transition: background-color 0.3s;
         }
         
-        #login-panel button:hover {
-            background-color: #922b21;
-        }
-
         #mensagem-erro {
             color: var(--cor-perigo);
-            margin-top: 10px;
+            margin-top: 15px;
             font-weight: bold;
             display: none;
         }
 
-        /* --- Estilos da Página Principal (Conteúdo da Chamadinha) --- */
+        /* --- Conteúdo Principal (Chamadinha) --- */
         #chamadinha-principal {
-            display: none; /* ESCONDIDO por padrão */
-        }
-
-        .chamadinha-container {
-            /* Estilo da div principal (igual ao código anterior) */
-            background-color: var(--cor-principal);
-            color: var(--cor-texto);
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
+            display: none; 
             width: 100%;
-            max-width: 600px; 
-            text-align: center;
-            border: 2px solid var(--cor-destaque);
         }
 
-        /* --- Estilos da Tabela e Selects (mantidos para o conteúdo principal) --- */
+        /* Título do App Header */
+        .app-header {
+            padding: 15px 0;
+            text-align: center;
+        }
         .pelotao-titulo {
-            font-size: 2.2em;
             color: var(--cor-destaque);
+            font-size: 1.6em;
+            letter-spacing: 1px;
             margin-bottom: 5px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
+        }
+        .slogan {
+            color: #b3c0c7;
+            font-size: 0.8em;
+        }
+        
+        /* Lista de Cards */
+        #lista-militares {
+            display: flex;
+            flex-direction: column;
+            gap: 10px; 
+            margin-bottom: 20px;
         }
 
-        .slogan {
-            font-size: 0.9em;
-            color: #bdc3c7;
-            margin-bottom: 15px;
-            border-bottom: 1px solid var(--cor-borda);
-            padding-bottom: 8px;
+        /* Card de Militar */
+        .militar-card {
+            background-color: var(--cor-card);
+            padding: 12px 15px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            border-left: 5px solid var(--cor-perigo);
         }
-        .tabela-status {
-            width: 100%;
-            border-collapse: separate;
-            border-spacing: 0;
-            margin-top: 10px;
-        }
-        .tabela-status th {
-            background-color: var(--cor-fundo);
-            color: var(--cor-destaque);
-            padding: 10px;
-            text-transform: uppercase;
-            font-size: 0.85em;
-            font-weight: 700;
-            text-align: left;
-        }
-        .tabela-status td {
-            background-color: #2b3b2b;
-            border-bottom: 1px solid var(--cor-borda);
-            padding: 8px 10px;
-            font-size: 0.95em;
-            color: var(--cor-texto);
-            vertical-align: middle;
-            text-align: left;
-        }
-        .tabela-status td:nth-child(2) {
-            background-color: var(--cor-principal);
-            text-align: center;
-        }
-        .status-select {
-            width: 100%;
-            padding: 8px;
-            border-radius: 4px;
-            background-color: #34495e;
-            color: var(--cor-texto);
-            border: 1px solid var(--cor-destaque);
-            appearance: none;
-            font-size: 0.9em;
-            cursor: pointer;
-        }
-        .relatorio-btn {
-            background-color: var(--cor-perigo);
-            color: var(--cor-texto);
-            padding: 12px 25px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 1em;
+        
+        .militar-nome {
             font-weight: bold;
-            margin-top: 20px;
-            transition: background-color 0.3s;
-            width: 100%;
+            color: var(--cor-texto);
+            font-size: 1em;
+            flex-grow: 1;
+            text-align: left;
         }
+
+        /* --- Estilo do Menu Select (Moderno) --- */
+        .status-select {
+            width: 150px;
+            padding: 10px 8px;
+            border-radius: 6px;
+            background-color: var(--cor-input);
+            color: var(--cor-texto);
+            border: none;
+            font-size: 0.9em;
+            cursor: pointer;
+            appearance: none;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="5" viewBox="0 0 10 5"><path fill="%23f1c40f" d="M0 0l5 5 5-5z"/></svg>');
+            background-repeat: no-repeat;
+            background-position: right 8px center;
+            padding-right: 25px;
+        }
+        
+        .relatorio-btn {
+            background-color: var(--cor-destaque);
+            color: var(--cor-fundo);
+            padding: 15px;
+            border-radius: 8px;
+            width: 100%;
+            font-size: 1.1em;
+            font-weight: 900;
+            margin-top: 10px;
+            transition: background-color 0.3s;
+            border: none;
+        }
+        
+        .relatorio-btn:hover {
+             background-color: #d1a80c;
+        }
+
+        /* --- Estilos do Relatório OTIMIZADO --- */
         #relatorio-output {
             margin-top: 20px;
             padding: 20px;
-            background-color: var(--cor-fundo);
-            border-radius: 6px;
+            background-color: var(--cor-borda); /* Fundo sutil */
+            border-radius: 8px;
             text-align: left;
             border-left: 4px solid var(--cor-destaque);
             display: none;
             width: 100%;
         }
+
         #relatorio-output h3 {
             color: var(--cor-destaque);
-            border-bottom: 1px solid var(--cor-borda);
-            padding-bottom: 8px;
-            margin-top: 0;
-            font-size: 1.3em;
+            border-bottom: 1px solid var(--cor-input);
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+            font-size: 1.4em;
         }
-        #relatorio-output .resumo-status {
+
+        /* Lista de Resumo (Substitui os blocos poluídos) */
+        .resumo-lista {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 20px 0;
+        }
+        
+        .resumo-lista li {
             display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            margin-bottom: 20px;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px dashed var(--cor-input);
+            font-size: 1em;
+            color: var(--cor-texto);
         }
-        #relatorio-output .resumo-status div {
-            padding: 10px;
-            background-color: #1a3e36;
-            border-radius: 4px;
-            flex-grow: 1;
-            min-width: 45%;
+        
+        .resumo-lista li:last-child {
+            border-bottom: none;
         }
-        #relatorio-output .resumo-status div strong {
-             color: var(--cor-destaque);
+
+        .resumo-lista strong {
+            font-size: 1.1em;
+            color: var(--cor-destaque);
         }
+        
+        /* Destaque para o Status Presentes */
+        .resumo-lista li:first-child strong {
+            color: var(--cor-sucesso);
+        }
+        
+        /* Destaque para a Lista de Faltosos (Mantido o alerta) */
+        .faltosos-titulo {
+            color: var(--cor-perigo);
+            margin-top: 25px;
+            font-size: 1.1em;
+            border-bottom: 1px solid var(--cor-perigo);
+            padding-bottom: 5px;
+        }
+        
         #relatorio-output ul {
             list-style-type: none;
             padding-left: 0;
+            color: var(--cor-perigo);
         }
-        #relatorio-output li {
+        #relatorio-output li.faltoso-item { /* Adicionada classe para item faltoso */
             background-color: #4a1d1d; 
-            padding: 5px;
-            margin-bottom: 3px;
-            border-radius: 3px;
+            padding: 8px;
+            margin-bottom: 4px;
+            border-radius: 4px;
             font-weight: bold;
+            color: var(--cor-texto);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
         }
+
     </style>
 </head>
 <body>
 
-    <div id="login-panel">
-        <h2>🔒 ACESSO RESTRITO</h2>
-        <p>Apenas militares do 1º Pelotão.</p>
-        <input type="password" id="senhaInput" placeholder="Digite a Senha">
-        <button onclick="verificarSenha()">ACESSAR CHAMADINHA</button>
-        <p id="mensagem-erro">⛔ Senha incorreta. Tente novamente.</p>
-    </div>
+    <div class="app-container">
 
-    <div id="chamadinha-principal">
-        <div class="chamadinha-container">
-            <h1 class="pelotao-titulo">1º PELOTÃO</h1>
-            <p class="slogan">🔥 **REGISTRO DE STATUS DIÁRIO** | FORÇA E HONRA 🔥</p>
+        <div id="login-panel">
+            <h2>🛡️ ACESSO DE PELOTÃO</h2>
+            <p>Sistema de Status Diário. Digite a senha:</p>
+            <input type="password" id="senhaInput" placeholder="Senha do 1º Pelotão">
+            <button onclick="verificarSenha()">ACESSAR CHAMADINHA</button>
+            <p id="mensagem-erro">⛔ Senha incorreta. Acesso Negado.</p>
+        </div>
+
+        <div id="chamadinha-principal">
+            
+            <header class="app-header">
+                <h1 class="pelotao-titulo">1º PELOTÃO</h1>
+                <p class="slogan">CHAMADINHA | ☠️ CAVEIRA ☠️</p>
+            </header>
             
             <form id="status-form">
-                <table class="tabela-status">
-                    <thead>
-                        <tr>
-                            <th>Militar</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        
-                        </tbody>
-                </table>
+                <div id="lista-militares">
+                    </div>
             </form>
             
             <button class="relatorio-btn" onclick="gerarRelatorio()">
-                GERAR RELATÓRIO DE STATUS
+                GERAR RELATÓRIO DE PRONTIDÃO
             </button>
 
             <div id="relatorio-output">
                 </div>
             
-            <p style="margin-top: 15px; font-style: italic; color: #aaaaaa; font-size: 0.8em;">Prontidão Total.</p>
+            <p style="margin-top: 15px; font-style: italic; color: #b3c0c7; font-size: 0.8em; text-align: center;">Prontidão Total.</p>
         </div>
     </div>
 
@@ -267,13 +294,34 @@
         ];
 
         const statusOptions = [
-             { value: "Presenca", label: "✅ Presença" },
-            { value: "Falta", label: "❌ Falta" },
-            { value: "FaltaJustificada", label: "🟡 Falta Justificada" },
-            { value: "Ferias", label: "🔵 Férias" },
-            { value: "Servico", label: "🟣 Em Serviço" },
-            { value: "SaindoServico", label: "🟢 Saindo Serviço" }
+             { value: "Presenca", label: "✅ Presença", icon: "✅" },
+            { value: "Falta", label: "❌ Falta", icon: "❌" },
+            { value: "FaltaJustificada", label: "🟡 Falta Justificada", icon: "🟡" },
+            { value: "Ferias", label: "🔵 Férias", icon: "🔵" },
+            { value: "Servico", label: "🟣 Em Serviço", icon: "🟣" },
+            { value: "SaindoServico", label: "🟢 Saindo Serviço", icon: "🟢" }
         ];
+
+        // Mapeamento para cores de card baseadas no status
+        const statusColors = {
+            Presenca: '#2ecc71',
+            Falta: '#e74c3c',
+            FaltaJustificada: '#f39c12',
+            Ferias: '#3498db',
+            Servico: '#8e44ad',
+            SaindoServico: '#16a085'
+        };
+        
+        // Mapeamento para exibição no relatório
+        const statusReportLabels = {
+            Presenca: 'Presentes',
+            Falta: 'Faltas (Total)',
+            FaltaJustificada: 'Faltas Justificadas',
+            Ferias: 'Em Férias',
+            Servico: 'Em Serviço',
+            SaindoServico: 'Saindo de Serviço'
+        };
+
 
         // --- FUNÇÃO DE LOGIN ---
         function verificarSenha() {
@@ -283,22 +331,31 @@
             const mensagemErro = document.getElementById('mensagem-erro');
 
             if (senhaDigitada === SENHA_CORRETA) {
-                // Senha correta: Esconde o login, mostra a chamadinha
                 loginPanel.style.display = 'none';
                 chamadinhaPrincipal.style.display = 'block';
-                // Chama a função para preencher o conteúdo dinâmico
-                preencherTabela(); 
+                preencherCards(); 
             } else {
-                // Senha incorreta: Exibe mensagem de erro
                 mensagemErro.style.display = 'block';
-                document.getElementById('senhaInput').value = ''; // Limpa o campo
+                document.getElementById('senhaInput').value = ''; 
+            }
+        }
+        
+        // --- FUNÇÃO DE ATUALIZAÇÃO DE COR DO CARD ---
+        function atualizarCorCard(selectElement) {
+            const card = selectElement.closest('.militar-card');
+            const novoStatus = selectElement.value;
+            const novaCor = statusColors[novoStatus];
+            
+            if (novaCor) {
+                card.style.borderLeftColor = novaCor;
             }
         }
 
-        // --- FUNÇÃO 1: Preenche a Tabela com Selects (Chamada após o login) ---
-        function preencherTabela() {
-            const tbody = document.querySelector('.tabela-status tbody');
-            let rowsHTML = '';
+
+        // --- FUNÇÃO 1: Preenche os Cards com Selects ---
+        function preencherCards() {
+            const listaMilitaresDiv = document.getElementById('lista-militares');
+            let cardsHTML = '';
 
             militares.forEach(nomeCompleto => {
                 const nomeCurto = nomeCompleto.replace(/[^a-zA-Z]/g, '').toLowerCase(); 
@@ -309,22 +366,22 @@
                     optionsHTML += `<option value="${status.value}" ${selectedAttr}>${status.label}</option>`;
                 });
                 
-                rowsHTML += `
-                    <tr>
-                        <td>${nomeCompleto}</td>
-                        <td>
-                            <select name="status_${nomeCurto}" class="status-select">
-                                ${optionsHTML}
-                            </select>
-                        </td>
-                    </tr>
+                const initialColor = statusColors['Presenca'];
+
+                cardsHTML += `
+                    <div class="militar-card" style="border-left-color: ${initialColor};">
+                        <span class="militar-nome">${nomeCompleto}</span>
+                        <select name="status_${nomeCurto}" class="status-select" onchange="atualizarCorCard(this)">
+                            ${optionsHTML}
+                        </select>
+                    </div>
                 `;
             });
-            tbody.innerHTML = rowsHTML;
+            listaMilitaresDiv.innerHTML = cardsHTML;
         }
 
 
-        // --- FUNÇÃO 2: Gerar Relatório ---
+        // --- FUNÇÃO 2: Gerar Relatório (OTIMIZADO) ---
         function gerarRelatorio() {
             const form = document.getElementById('status-form');
             const relatorioOutput = document.getElementById('relatorio-output');
@@ -347,7 +404,6 @@
                     
                     if (status === 'Falta') {
                         const nomeCurto = name.replace('status_', '');
-                        // A função .find procura o nome completo baseado na versão "curta" e minuscula
                         const nomeCompleto = militares.find(n => n.replace(/[^a-zA-Z]/g, '').toLowerCase() === nomeCurto);
                         if (nomeCompleto) {
                             faltasNomes.push(nomeCompleto);
@@ -356,25 +412,44 @@
                 }
             }
 
-            // 2. Montar o relatório em HTML
-            let relatorioHTML = '<h3>📊 Resumo da Chamada</h3>';
+            // 1. Montar a lista de resumo
+            let resumoListaHTML = '<ul class="resumo-lista">';
             
-            relatorioHTML += '<div class="resumo-status">';
-            relatorioHTML += `<div>✅ **Presentes:** <strong>${contagem.Presenca}</strong></div>`;
-            relatorioHTML += `<div>❌ **Faltas (Total):** <strong>${contagem.Falta}</strong></div>`;
-            relatorioHTML += `<div>🟡 **F. Justificadas:** <strong>${contagem.FaltaJustificada}</strong></div>`;
-            relatorioHTML += `<div>🔵 **Em Férias:** <strong>${contagem.Ferias}</strong></div>`;
-            relatorioHTML += `<div>🟣 **Em Serviço:** <strong>${contagem.Servico}</strong></div>`;
-            relatorioHTML += `<div>🟢 **Saindo Serv.:** <strong>${contagem.SaindoServico}</strong></div>`;
-            relatorioHTML += '</div>';
-            
+            // Ordem de exibição no relatório (Hierarquia)
+            const ordemRelatorio = ['Presenca', 'Falta', 'FaltaJustificada', 'Ferias', 'Servico', 'SaindoServico'];
+
+            ordemRelatorio.forEach(statusKey => {
+                const label = statusReportLabels[statusKey];
+                const count = contagem[statusKey];
+                const icon = statusOptions.find(opt => opt.value === statusKey).icon;
+                
+                // Formato limpo: Icone | Label | Contagem
+                resumoListaHTML += `
+                    <li>
+                        <span>${icon} ${label}:</span>
+                        <strong>${count}</strong>
+                    </li>
+                `;
+            });
+
+            resumoListaHTML += '</ul>';
+
+            // 2. Adicionar a lista de quem faltou
+            let faltososHTML = '';
             if (faltasNomes.length > 0) {
-                relatorioHTML += '<h4 style="color:var(--cor-perigo); margin-top: 20px;">🚨 MILITARES FALTOSOS:</h4>';
-                relatorioHTML += '<ul>' + faltasNomes.map(nome => `<li>${nome}</li>`).join('') + '</ul>';
+                faltososHTML += `<h4 class="faltosos-titulo">🚨 MILITARES FALTOSOS:</h4>`;
+                faltososHTML += '<ul>' + faltasNomes.map(nome => `<li class="faltoso-item">${nome}</li>`).join('') + '</ul>';
             } else {
-                 relatorioHTML += '<p style="color:#2ecc71; margin-top: 20px;">**NENHUMA FALTA REGISTRADA NO MOMENTO.**</p>';
+                 faltososHTML += `<p style="color:var(--cor-sucesso); margin-top: 15px;">✅ **NENHUMA FALTA REGISTRADA.**</p>`;
             }
 
+
+            // 3. Montar o relatório final
+            let relatorioHTML = '<h3>📊 Resumo de Prontidão</h3>';
+            relatorioHTML += resumoListaHTML;
+            relatorioHTML += faltososHTML;
+            
+            // 4. Exibir
             relatorioOutput.innerHTML = relatorioHTML;
             relatorioOutput.style.display = 'block';
             
