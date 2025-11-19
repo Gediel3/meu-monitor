@@ -3,541 +3,384 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gediel Dornelles | Full Stack Developer</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>/* VARIÁVEIS CSS para fácil customização */
-:root {
-    --primary-color: #00bcd4; /* Ciano/Teal: Cor de destaque moderna */
-    --background-dark: #121212; /* Fundo principal escuro */
-    --card-dark: #1e1e1e; /* Fundo dos cards e elementos */
-    --text-light: #ffffff; /* Texto claro principal */
-    --text-secondary: #aaaaaa; /* Texto secundário (parágrafos, descrições) */
-    --font-family: 'Poppins', sans-serif;
-    --border-radius: 8px;
-    --transition-speed: 0.3s;
-}
+    <title>Acesso Restrito - 1º Pelotão</title>
+    <style>
+        /* --- Cores e Tipografia Exército --- */
+        :root {
+            --cor-fundo: #001f1a;      
+            --cor-principal: #3f4f3f;  
+            --cor-destaque: #f1c40f;   /* Amarelo/Dourado (Patente) */
+            --cor-perigo: #c0392b;     /* Vermelho Escuro (Alerta/Falta) */
+            --cor-texto: #ecf0f1;      
+            --cor-borda: #1a3e36;
+        }
 
-/* RESET E ESTILOS GERAIS */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+        /* --- Estilos Gerais --- */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--cor-fundo);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 10px;
+        }
 
-body {
-    font-family: var(--font-family);
-    background-color: var(--background-dark);
-    color: var(--text-light);
-    line-height: 1.6;
-    scroll-behavior: smooth;
-}
+        /* --- Estilo do Painel de Login --- */
+        #login-panel {
+            background-color: var(--cor-principal);
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
+            width: 90%;
+            max-width: 350px;
+            text-align: center;
+            border: 2px solid var(--cor-destaque);
+            color: var(--cor-texto);
+        }
+        
+        #login-panel h2 {
+            color: var(--cor-destaque);
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
 
-a {
-    color: var(--primary-color);
-    text-decoration: none;
-    transition: color var(--transition-speed);
-}
+        #login-panel input[type="password"] {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid var(--cor-borda);
+            border-radius: 4px;
+            background-color: #2b3b2b;
+            color: var(--cor-texto);
+            font-size: 1.1em;
+            text-align: center;
+        }
 
-a:hover {
-    color: #4dd0e1; /* Cor mais clara para hover */
-}
+        #login-panel button {
+            background-color: var(--cor-perigo);
+            color: var(--cor-texto);
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        
+        #login-panel button:hover {
+            background-color: #922b21;
+        }
 
-/* NAVEGAÇÃO (HEADER) */
-.header {
-    background-color: var(--card-dark);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-}
+        #mensagem-erro {
+            color: var(--cor-perigo);
+            margin-top: 10px;
+            font-weight: bold;
+            display: none;
+        }
 
-.nav-bar {
-    max-width: 1200px;
-    margin: 0 auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 20px;
-}
+        /* --- Estilos da Página Principal (Conteúdo da Chamadinha) --- */
+        #chamadinha-principal {
+            display: none; /* ESCONDIDO por padrão */
+        }
 
-.logo {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--primary-color);
-}
+        .chamadinha-container {
+            /* Estilo da div principal (igual ao código anterior) */
+            background-color: var(--cor-principal);
+            color: var(--cor-texto);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
+            width: 100%;
+            max-width: 600px; 
+            text-align: center;
+            border: 2px solid var(--cor-destaque);
+        }
 
-.nav-links {
-    list-style: none;
-    display: flex;
-}
+        /* --- Estilos da Tabela e Selects (mantidos para o conteúdo principal) --- */
+        .pelotao-titulo {
+            font-size: 2.2em;
+            color: var(--cor-destaque);
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
 
-.nav-links li {
-    margin-left: 30px;
-}
-
-.nav-links a {
-    color: var(--text-light);
-    font-weight: 600;
-    padding: 5px 0;
-    position: relative;
-}
-
-.nav-links a:after {
-    content: '';
-    position: absolute;
-    width: 0;
-    height: 2px;
-    display: block;
-    margin-top: 5px;
-    right: 0;
-    background: var(--primary-color);
-    transition: width var(--transition-speed) ease;
-}
-
-.nav-links a:hover:after {
-    width: 100%;
-    left: 0;
-    background: var(--primary-color);
-}
-
-.btn-contact {
-    background-color: var(--primary-color);
-    color: var(--background-dark) !important;
-    padding: 8px 15px;
-    border-radius: var(--border-radius);
-    transition: background-color var(--transition-speed);
-}
-
-.btn-contact:hover {
-    background-color: #4dd0e1;
-}
-
-.btn-contact:after {
-    display: none; /* Remove o sublinhado do botão de contato */
-}
-
-/* SEÇÃO HERO */
-.hero {
-    min-height: 80vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    padding: 0 20px;
-    position: relative;
-}
-
-.hero-content {
-    margin-bottom: 50px;
-}
-
-.greeting {
-    font-size: 1.2rem;
-    font-weight: 400;
-    color: var(--primary-color);
-}
-
-.name {
-    font-size: 4rem;
-    font-weight: 700;
-    margin-bottom: 10px;
-}
-
-.title {
-    font-size: 2rem;
-    font-weight: 600;
-    color: var(--text-secondary);
-    margin-bottom: 20px;
-}
-
-.tagline {
-    font-size: 1.1rem;
-    max-width: 700px;
-    color: var(--text-secondary);
-}
-
-.scroll-down-btn {
-    position: absolute;
-    bottom: 30px;
-    font-size: 1.5rem;
-    animation: bounce 2s infinite;
-}
-
-@keyframes bounce {
-    0%, 20%, 50%, 80%, 100% {
-        transform: translateY(0);
-    }
-    40% {
-        transform: translateY(-10px);
-    }
-    60% {
-        transform: translateY(-5px);
-    }
-}
-
-/* SEÇÕES GERAIS */
-.section {
-    padding: 80px 20px;
-    max-width: 1200px;
-    margin: 0 auto;
-}
-
-.section-title {
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: var(--primary-color);
-    text-align: center;
-    margin-bottom: 50px;
-    position: relative;
-    /* Sublinhado sofisticado */
-}
-
-.section-title::after {
-    content: '';
-    display: block;
-    width: 60px;
-    height: 4px;
-    background: var(--primary-color);
-    margin: 10px auto 0;
-    border-radius: 2px;
-}
-
-/* SOBRE MIM */
-.about-content p {
-    max-width: 800px;
-    margin: 20px auto;
-    font-size: 1.1rem;
-    color: var(--text-secondary);
-    text-align: center;
-}
-
-/* HABILIDADES */
-.skills-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 30px;
-    text-align: center;
-}
-
-.skill-card {
-    background-color: var(--card-dark);
-    padding: 30px;
-    border-radius: var(--border-radius);
-    border: 1px solid rgba(0, 188, 212, 0.1); /* Borda sutil */
-    transition: transform var(--transition-speed), box-shadow var(--transition-speed);
-}
-
-.skill-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0, 188, 212, 0.15);
-}
-
-.skill-card i {
-    font-size: 2.5rem;
-    color: var(--primary-color);
-    margin-bottom: 15px;
-}
-
-.skill-card h4 {
-    font-size: 1.4rem;
-    font-weight: 600;
-    margin-bottom: 10px;
-}
-
-.skill-card p {
-    color: var(--text-secondary);
-    font-size: 0.95rem;
-}
-
-/* PROJETOS */
-.project-card {
-    background-color: var(--card-dark);
-    padding: 30px;
-    border-radius: var(--border-radius);
-    margin-bottom: 40px;
-    border-left: 5px solid var(--primary-color);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-    transition: background-color var(--transition-speed);
-}
-
-.project-card:hover {
-    background-color: #242424;
-}
-
-.project-card h4 {
-    font-size: 1.8rem;
-    font-weight: 700;
-    margin-bottom: 10px;
-    color: var(--text-light);
-}
-
-.project-card h4 i {
-    color: var(--primary-color);
-    margin-right: 10px;
-}
-
-.project-tagline {
-    color: var(--primary-color);
-    font-style: italic;
-    margin-bottom: 15px;
-}
-
-.project-details p {
-    color: var(--text-secondary);
-    margin-bottom: 20px;
-}
-
-.project-links a {
-    display: inline-block;
-    margin-right: 15px;
-    font-weight: 600;
-}
-
-.project-links a i {
-    margin-right: 5px;
-}
-
-/* CONTATO */
-.contact {
-    text-align: center;
-}
-
-.contact p {
-    font-size: 1.1rem;
-    color: var(--text-secondary);
-    margin-bottom: 40px;
-}
-
-.contact-links {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    flex-wrap: wrap;
-}
-
-.contact-btn {
-    display: flex;
-    align-items: center;
-    padding: 12px 25px;
-    border-radius: 50px;
-    font-weight: 600;
-    transition: all var(--transition-speed);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-.contact-btn i {
-    margin-right: 10px;
-    font-size: 1.1rem;
-}
-
-.email-btn {
-    background-color: var(--primary-color);
-    color: var(--background-dark) !important;
-}
-
-.email-btn:hover {
-    background-color: #4dd0e1;
-}
-
-.linkedin-btn {
-    background-color: #0077b5;
-    color: var(--text-light) !important;
-}
-
-.linkedin-btn:hover {
-    background-color: #0099e6;
-}
-
-.github-btn {
-    background-color: #333;
-    color: var(--text-light) !important;
-}
-
-.github-btn:hover {
-    background-color: #555;
-}
-
-/* RODAPÉ */
-.footer {
-    background-color: var(--card-dark);
-    text-align: center;
-    padding: 20px;
-    color: var(--text-secondary);
-    font-size: 0.9rem;
-}
-
-.footer i {
-    color: #e53935; /* Coração vermelho */
-    margin: 0 5px;
-}
-
-/* RESPONSIVIDADE (Para telas menores) */
-@media (max-width: 768px) {
-    .nav-bar {
-        flex-direction: column;
-        text-align: center;
-    }
-    .nav-links {
-        margin-top: 15px;
-        justify-content: center;
-        flex-wrap: wrap;
-    }
-    .nav-links li {
-        margin: 5px 10px;
-    }
-    .name {
-        font-size: 3rem;
-    }
-    .title {
-        font-size: 1.5rem;
-    }
-    .skills-grid {
-        grid-template-columns: 1fr;
-    }
-    .project-card {
-        padding: 20px;
-    }
-    .contact-links {
-        flex-direction: column;
-        gap: 15px;
-    }
-    .contact-btn {
-        width: 80%;
-        margin: 0 auto;
-        justify-content: center;
-    }
-}
-</style>
+        .slogan {
+            font-size: 0.9em;
+            color: #bdc3c7;
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--cor-borda);
+            padding-bottom: 8px;
+        }
+        .tabela-status {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 10px;
+        }
+        .tabela-status th {
+            background-color: var(--cor-fundo);
+            color: var(--cor-destaque);
+            padding: 10px;
+            text-transform: uppercase;
+            font-size: 0.85em;
+            font-weight: 700;
+            text-align: left;
+        }
+        .tabela-status td {
+            background-color: #2b3b2b;
+            border-bottom: 1px solid var(--cor-borda);
+            padding: 8px 10px;
+            font-size: 0.95em;
+            color: var(--cor-texto);
+            vertical-align: middle;
+            text-align: left;
+        }
+        .tabela-status td:nth-child(2) {
+            background-color: var(--cor-principal);
+            text-align: center;
+        }
+        .status-select {
+            width: 100%;
+            padding: 8px;
+            border-radius: 4px;
+            background-color: #34495e;
+            color: var(--cor-texto);
+            border: 1px solid var(--cor-destaque);
+            appearance: none;
+            font-size: 0.9em;
+            cursor: pointer;
+        }
+        .relatorio-btn {
+            background-color: var(--cor-perigo);
+            color: var(--cor-texto);
+            padding: 12px 25px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+            margin-top: 20px;
+            transition: background-color 0.3s;
+            width: 100%;
+        }
+        #relatorio-output {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: var(--cor-fundo);
+            border-radius: 6px;
+            text-align: left;
+            border-left: 4px solid var(--cor-destaque);
+            display: none;
+            width: 100%;
+        }
+        #relatorio-output h3 {
+            color: var(--cor-destaque);
+            border-bottom: 1px solid var(--cor-borda);
+            padding-bottom: 8px;
+            margin-top: 0;
+            font-size: 1.3em;
+        }
+        #relatorio-output .resumo-status {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        #relatorio-output .resumo-status div {
+            padding: 10px;
+            background-color: #1a3e36;
+            border-radius: 4px;
+            flex-grow: 1;
+            min-width: 45%;
+        }
+        #relatorio-output .resumo-status div strong {
+             color: var(--cor-destaque);
+        }
+        #relatorio-output ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        #relatorio-output li {
+            background-color: #4a1d1d; 
+            padding: 5px;
+            margin-bottom: 3px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
 
-    <header class="header">
-        <nav class="nav-bar">
-            <div class="logo">Gediel Dornelles</div>
-            <ul class="nav-links">
-                <li><a href="#about">Sobre</a></li>
-                <li><a href="#skills">Habilidades</a></li>
-                <li><a href="#projects">Projetos</a></li>
-                <li><a href="#contact" class="btn-contact">Contato</a></li>
-            </ul>
-        </nav>
-    </header>
+    <div id="login-panel">
+        <h2>🔒 ACESSO RESTRITO</h2>
+        <p>Apenas militares do 1º Pelotão.</p>
+        <input type="password" id="senhaInput" placeholder="Digite a Senha">
+        <button onclick="verificarSenha()">ACESSAR CHAMADINHA</button>
+        <p id="mensagem-erro">⛔ Senha incorreta. Tente novamente.</p>
+    </div>
 
-    <section id="hero" class="hero">
-        <div class="hero-content">
-            <p class="greeting">Olá, eu sou</p>
-            <h1 class="name">Gediel Dornelles.</h1>
-            <h2 class="title">Full Stack Developer | Criando Soluções Digitais de Alto Impacto.</h2>
-            <p class="tagline">Transformando ideias complexas em sistemas robustos e escaláveis para mobilidade, finanças e logística.</p>
-        </div>
-        <a href="#projects" class="scroll-down-btn"><i class="fas fa-chevron-down"></i></a>
-    </section>
+    <div id="chamadinha-principal">
+        <div class="chamadinha-container">
+            <h1 class="pelotao-titulo">1º PELOTÃO</h1>
+            <p class="slogan">🔥 **REGISTRO DE STATUS DIÁRIO** | FORÇA E HONRA 🔥</p>
+            
+            <form id="status-form">
+                <table class="tabela-status">
+                    <thead>
+                        <tr>
+                            <th>Militar</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                        </tbody>
+                </table>
+            </form>
+            
+            <button class="relatorio-btn" onclick="gerarRelatorio()">
+                GERAR RELATÓRIO DE STATUS
+            </button>
 
-    <section id="about" class="section about-me">
-        <h3 class="section-title">Sobre Mim</h3>
-        <div class="about-content">
-            <p>Com uma paixão por tecnologia e inovação, sou um desenvolvedor Full Stack focado em construir a ponte completa entre o design visual e a lógica de negócios.</p>
-            <p>Minha experiência abrange desde a arquitetura de banco de dados e APIs de alta performance até o desenvolvimento de interfaces de usuário intuitivas e responsivas.</p>
-            <p>Meu objetivo é simples: entregar software que não apenas funciona, mas que resolve problemas reais e gera valor.</p>
-        </div>
-    </section>
-
-    <section id="skills" class="section skills">
-        <h3 class="section-title">Habilidades Técnicas</h3>
-        <div class="skills-grid">
-            <div class="skill-card">
-                <i class="fas fa-code"></i>
-                <h4>Frontend</h4>
-                <p>React, Vue.js, JavaScript (ES6+), HTML5, CSS3, Redux.</p>
-            </div>
-            <div class="skill-card">
-                <i class="fas fa-server"></i>
-                <h4>Backend & API</h4>
-                <p>Node.js (Express/NestJS), Python (Django), Java (Spring Boot), APIs REST/GraphQL.</p>
-            </div>
-            <div class="skill-card">
-                <i class="fas fa-database"></i>
-                <h4>Banco de Dados</h4>
-                <p>PostgreSQL, MySQL, MongoDB, Redis (Caching).</p>
-            </div>
-            <div class="skill-card">
-                <i class="fas fa-cloud"></i>
-                <h4>DevOps & Cloud</h4>
-                <p>Docker, CI/CD, AWS/GCP, Versionamento Git.</p>
-            </div>
-        </div>
-    </section>
-
-    <section id="projects" class="section projects">
-        <h3 class="section-title">Meus Projetos em Destaque</h3>
-        
-        <article class="project-card">
-            <h4><i class="fas fa-bus"></i> CityMove: Sistema de Mobilidade Urbana Inteligente</h4>
-            <p class="project-tagline">Solução de rastreamento em tempo real, roteirização e gestão de frotas.</p>
-            <div class="project-details">
-                <p>Desenvolvimento de um backend escalável com **Node.js** para lidar com *WebSockets* e dados de geolocalização em tempo real. Implementação de algoritmos de otimização de rotas e frontend (React Native ou Web) para usuários e gestores.</p>
-                <div class="project-links">
-                    <a href="#" target="_blank"><i class="fas fa-external-link-alt"></i> Demo</a>
-                    <a href="#" target="_blank"><i class="fab fa-github"></i> GitHub</a>
+            <div id="relatorio-output">
                 </div>
-            </div>
-        </article>
-
-        <article class="project-card">
-            <h4><i class="fas fa-wallet"></i> FintechControl: Sistema de Gestão Financeira Segura</h4>
-            <p class="project-tagline">Plataforma para controle de fluxo de caixa, orçamentos e relatórios financeiros.</p>
-            <div class="project-details">
-                <p>Estrutura de dados **PostgreSQL** focada em integridade e segurança. Backend com **Python/Django** para processamento de transações e geração de relatórios detalhados. Foco em criptografia e autenticação robusta.</p>
-                <div class="project-links">
-                    <a href="#" target="_blank"><i class="fas fa-external-link-alt"></i> Demo</a>
-                    <a href="#" target="_blank"><i class="fab fa-github"></i> GitHub</a>
-                </div>
-            </div>
-        </article>
-
-        <article class="project-card">
-            <h4><i class="fas fa-route"></i> RouteMaster: Otimização Logística</h4>
-            <p class="project-tagline">Ferramenta que soluciona o Problema do Caixeiro Viajante (TSP) para rotas de entrega.</p>
-            <div class="project-details">
-                <p>Implementação de lógica de roteirização algorítmica em **Python**. Frontend interativo em **Vue.js** com visualização de mapa para definição de pontos e exibição da rota otimizada. Foco em performance de cálculo.</p>
-                <div class="project-links">
-                    <a href="#" target="_blank"><i class="fas fa-external-link-alt"></i> Demo</a>
-                    <a href="#" target="_blank"><i class="fab fa-github"></i> GitHub</a>
-                </div>
-            </div>
-        </article>
-        
-        <article class="project-card">
-            <h4><i class="fas fa-dice"></i> BetWave: Plataforma de Apostas Esportivas</h4>
-            <p class="project-tagline">Sistema de alto tráfego para gestão e atualização de Odds em tempo real.</p>
-            <div class="project-details">
-                <p>Motor de regras de negócio em **Java Spring Boot** para alta concorrência. Utilização de **Redis** para caching de odds em tempo real. Módulos complexos de processamento de transações e liquidação de apostas.</p>
-                <div class="project-links">
-                    <a href="#" target="_blank"><i class="fas fa-external-link-alt"></i> Demo</a>
-                    <a href="#" target="_blank"><i class="fab fa-github"></i> GitHub</a>
-                </div>
-            </div>
-        </article>
-    </section>
-
-    <section id="contact" class="section contact">
-        <h3 class="section-title">Vamos Construir Algo Juntos?</h3>
-        <p>Estou sempre aberto a novos desafios e oportunidades de colaboração. Entre em contato!</p>
-        <div class="contact-links">
-            <a href="gediel.dornelles@gmail.clm" class="contact-btn email-btn">
-                <i class="fas fa-envelope"></i> Enviar Email
-            </a>
+            
+            <p style="margin-top: 15px; font-style: italic; color: #aaaaaa; font-size: 0.8em;">Prontidão Total.</p>
         </div>
-    </section>
+    </div>
 
-    <footer class="footer">
-        <p>&copy; 2025 Gediel Dornelles | Desenvolvido com <i class="fas fa-heart"></i></p>
-    </footer>
+    <script>
+        // Senha configurada
+        const SENHA_CORRETA = "9090";
+
+        // Variáveis globais para o conteúdo da chamadinha
+        const militares = [
+            "SGT Marlon", "SGT Guimarães", "SGT G. Nascimento", 
+            "CB Natan", "CB Brayan", "CB Siqueira", "CB Rodrigues Silva", 
+            "CB Mossi", "CB Eric", "CB Abner Robalo", "CB Parahiba", 
+            "CB Greff", "SD Dalongaro", "SD Gomes", "SD Elton", "SD Gediel"
+        ];
+
+        const statusOptions = [
+             { value: "Presenca", label: "✅ Presença" },
+            { value: "Falta", label: "❌ Falta" },
+            { value: "FaltaJustificada", label: "🟡 Falta Justificada" },
+            { value: "Ferias", label: "🔵 Férias" },
+            { value: "Servico", label: "🟣 Em Serviço" },
+            { value: "SaindoServico", label: "🟢 Saindo Serviço" }
+        ];
+
+        // --- FUNÇÃO DE LOGIN ---
+        function verificarSenha() {
+            const senhaDigitada = document.getElementById('senhaInput').value;
+            const loginPanel = document.getElementById('login-panel');
+            const chamadinhaPrincipal = document.getElementById('chamadinha-principal');
+            const mensagemErro = document.getElementById('mensagem-erro');
+
+            if (senhaDigitada === SENHA_CORRETA) {
+                // Senha correta: Esconde o login, mostra a chamadinha
+                loginPanel.style.display = 'none';
+                chamadinhaPrincipal.style.display = 'block';
+                // Chama a função para preencher o conteúdo dinâmico
+                preencherTabela(); 
+            } else {
+                // Senha incorreta: Exibe mensagem de erro
+                mensagemErro.style.display = 'block';
+                document.getElementById('senhaInput').value = ''; // Limpa o campo
+            }
+        }
+
+        // --- FUNÇÃO 1: Preenche a Tabela com Selects (Chamada após o login) ---
+        function preencherTabela() {
+            const tbody = document.querySelector('.tabela-status tbody');
+            let rowsHTML = '';
+
+            militares.forEach(nomeCompleto => {
+                const nomeCurto = nomeCompleto.replace(/[^a-zA-Z]/g, '').toLowerCase(); 
+                let optionsHTML = '';
+
+                statusOptions.forEach(status => {
+                    const selectedAttr = (status.value === 'Presenca') ? 'selected' : ''; 
+                    optionsHTML += `<option value="${status.value}" ${selectedAttr}>${status.label}</option>`;
+                });
+                
+                rowsHTML += `
+                    <tr>
+                        <td>${nomeCompleto}</td>
+                        <td>
+                            <select name="status_${nomeCurto}" class="status-select">
+                                ${optionsHTML}
+                            </select>
+                        </td>
+                    </tr>
+                `;
+            });
+            tbody.innerHTML = rowsHTML;
+        }
+
+
+        // --- FUNÇÃO 2: Gerar Relatório ---
+        function gerarRelatorio() {
+            const form = document.getElementById('status-form');
+            const relatorioOutput = document.getElementById('relatorio-output');
+            
+            const contagem = {
+                Presenca: 0,
+                Falta: 0,
+                FaltaJustificada: 0,
+                Ferias: 0,
+                Servico: 0,
+                SaindoServico: 0
+            };
+            
+            const faltasNomes = [];
+            const formData = new FormData(form);
+            
+            for (let [name, status] of formData.entries()) {
+                if (name.startsWith('status_')) {
+                    contagem[status]++; 
+                    
+                    if (status === 'Falta') {
+                        const nomeCurto = name.replace('status_', '');
+                        // A função .find procura o nome completo baseado na versão "curta" e minuscula
+                        const nomeCompleto = militares.find(n => n.replace(/[^a-zA-Z]/g, '').toLowerCase() === nomeCurto);
+                        if (nomeCompleto) {
+                            faltasNomes.push(nomeCompleto);
+                        }
+                    }
+                }
+            }
+
+            // 2. Montar o relatório em HTML
+            let relatorioHTML = '<h3>📊 Resumo da Chamada</h3>';
+            
+            relatorioHTML += '<div class="resumo-status">';
+            relatorioHTML += `<div>✅ **Presentes:** <strong>${contagem.Presenca}</strong></div>`;
+            relatorioHTML += `<div>❌ **Faltas (Total):** <strong>${contagem.Falta}</strong></div>`;
+            relatorioHTML += `<div>🟡 **F. Justificadas:** <strong>${contagem.FaltaJustificada}</strong></div>`;
+            relatorioHTML += `<div>🔵 **Em Férias:** <strong>${contagem.Ferias}</strong></div>`;
+            relatorioHTML += `<div>🟣 **Em Serviço:** <strong>${contagem.Servico}</strong></div>`;
+            relatorioHTML += `<div>🟢 **Saindo Serv.:** <strong>${contagem.SaindoServico}</strong></div>`;
+            relatorioHTML += '</div>';
+            
+            if (faltasNomes.length > 0) {
+                relatorioHTML += '<h4 style="color:var(--cor-perigo); margin-top: 20px;">🚨 MILITARES FALTOSOS:</h4>';
+                relatorioHTML += '<ul>' + faltasNomes.map(nome => `<li>${nome}</li>`).join('') + '</ul>';
+            } else {
+                 relatorioHTML += '<p style="color:#2ecc71; margin-top: 20px;">**NENHUMA FALTA REGISTRADA NO MOMENTO.**</p>';
+            }
+
+            relatorioOutput.innerHTML = relatorioHTML;
+            relatorioOutput.style.display = 'block';
+            
+            relatorioOutput.scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
 
 </body>
-                </html>
-                
+</html>
