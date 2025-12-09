@@ -3,37 +3,261 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>1º Pelotão | Status App</title>
+    <title>Localizador Móvel | Serviço de Rastreamento</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        /* --- Cores e Tipografia App Militar --- */
-        :root {
-            --cor-fundo: #1c2732;      
-            --cor-card: #283747;       
-            --cor-destaque: #f1c40f;   /* Amarelo/Dourado */
-            --cor-perigo: #e74c3c;     /* Vermelho (Ação/Alerta) */
-            --cor-sucesso: #2ecc71;    /* Verde (Sucesso) */
-            --cor-texto: #ecf0f1;      
-            --cor-borda: #34495e;
-            --cor-input: #34495e;
-        }
-
-        /* --- Estilos Gerais e Mobile Layout --- */
+        /* Estilos Globais e Tema Escuro */
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--cor-fundo);
+            background-color: #1e1e1e;
+            color: #f0f0f0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            margin: 0;
-            padding: 15px;
+        }
+
+        /* Container Principal do Formulário e Mapa */
+        .localizador-container {
+            background-color: #2c2c2c;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+            padding: 30px;
+            width: 90%;
+            max-width: 500px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Título */
+        h2 {
+            text-align: center;
+            color: #79d2a6;
+            margin-bottom: 25px;
+            font-weight: 600;
+        }
+
+        /* Campo de Input Fixo */
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 20px;
         }
         
-        /* Container Principal e Login */
-        .app-container {
+        #numero {
+            text-align: center;
+            width: 80%;
+            padding: 12px;
+            border: 1px solid #555;
+            border-radius: 6px;
+            background-color: #383838;
+            color: #f0f0f0;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        /* Botão de Ação */
+        button {
+            padding: 12px 30px;
+            background-color: #79d2a6;
+            color: #1e1e1e;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #5cb887;
+        }
+
+        /* Área do Mapa */
+        #map {
+            height: 350px;
             width: 100%;
-            max-width: 450px;
+            border-radius: 8px;
+            border: 2px solid #444;
+            margin-top: 25px;
+            display: none; 
+        }
+
+        /* Modal de Carregamento */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 10;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.85); /* Fundo mais escuro */
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: #1e1e1e;
+            padding: 40px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 5px 25px rgba(121, 210, 166, 0.2); /* Sombra verde */
+            color: #f0f0f0;
+            border: 1px solid #79d2a6;
+        }
+
+        /* Spinner de Carregamento (Mais profissional) */
+        .loader {
+            border: 4px solid #f3f3f340;
+            border-top: 4px solid #79d2a6;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .aviso {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #383838;
+            border-left: 4px solid #f9a825;
+            border-radius: 4px;
+            font-size: 0.8em;
+            color: #bbb;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+    <audio id="scanSound" src="https://assets.mixkit.co/sfx/preview/mixkit-scifi-scanner-2292.mp3" preload="auto"></audio>
+    <audio id="confirmSound" src="https://assets.mixkit.co/sfx/preview/mixkit-positive-scan-beep-221.mp3" preload="auto"></audio>
+
+
+    <div class="localizador-container">
+        
+        <h2><i class="fas fa-satellite-dish"></i> Localizador de Dispositivo Móvel</h2>
+        
+        <div class="input-group">
+            <label>Número Alvo:</label>
+            <input type="text" id="numero" value="+55 21 98149-3031" readonly>
+            
+            <button onclick="simularLocalizacao()">
+                <i class="fas fa-crosshairs"></i> Localizar
+            </button>
+        </div>
+
+        <div id="map"></div>
+
+   
+
+    </div>
+
+    <div id="loadingModal" class="modal">
+        <div class="modal-content">
+            <div class="loader"></div>
+            <h3>Triangulando Coordenadas...</h3>
+            <p>Conectando-se ao satélite e processando o sinal do dispositivo.</p>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        // --- Constantes de Localização ---
+        const LATITUDE_FIXA = -22.8028;
+        const LONGITUDE_FIXA = -43.1979;
+        const ZOOM_LEVEL = 15;
+        const NUMERO_FIXO = "+55 21 98149-3031";
+        
+        let mapa = null;
+        let marcador = null;
+        let scanInterval = null;
+
+        // Funções para manipular o áudio
+        const scanAudio = document.getElementById('scanSound');
+        const confirmAudio = document.getElementById('confirmSound');
+
+        function playScanSound() {
+            scanAudio.loop = true; // Mantém o som repetindo
+            scanAudio.play().catch(e => console.log("Áudio de scan bloqueado.")); // Trata possível bloqueio
+        }
+
+        function stopScanSound() {
+            scanAudio.pause();
+            scanAudio.currentTime = 0;
+        }
+
+        function playConfirmSound() {
+            confirmAudio.play().catch(e => console.log("Áudio de confirmação bloqueado."));
+        }
+
+
+        function simularLocalizacao() {
+            const modal = document.getElementById('loadingModal');
+            const mapaDiv = document.getElementById('map');
+
+            // 1. Iniciar Áudio de Scan e Mostrar Modal
+            playScanSound();
+            modal.style.display = 'flex';
+            mapaDiv.style.display = 'none';
+
+            // 2. Simular o processo de localização (3 segundos)
+            setTimeout(() => {
+                // 3. Parar Áudio de Scan e Tocar Confirmação
+                stopScanSound();
+                playConfirmSound();
+
+                // 4. Ocultar Modal e Exibir Mapa
+                modal.style.display = 'none';
+                mapaDiv.style.display = 'block';
+
+                // 5. Inicializar/Atualizar o Mapa
+                iniciarMapa();
+            }, 3000); 
+        }
+
+        function iniciarMapa() {
+            if (mapa === null) {
+                mapa = L.map('map').setView([LATITUDE_FIXA, LONGITUDE_FIXA], ZOOM_LEVEL);
+
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 19,
+                    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                }).addTo(mapa);
+
+                const markerPosition = [LATITUDE_FIXA, LONGITUDE_FIXA];
+                const popupContent = `Localização Confirmada:<br><strong>${NUMERO_FIXO}</strong><br>Jardim Carioca, RJ`;
+                
+                marcador = L.marker(markerPosition).addTo(mapa)
+                    .bindPopup(popupContent).openPopup();
+            } else {
+                mapa.setView([LATITUDE_FIXA, LONGITUDE_FIXA], ZOOM_LEVEL);
+                // Essencial para renderizar o mapa corretamente após a div ficar visível
+                mapa.invalidateSize(); 
+            }
+        }
+    </script>
+
+</body>
+</html>
         }
 
         /* --- Painel de Login --- */
